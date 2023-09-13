@@ -156,19 +156,23 @@ app.get("/evaluate",(req,res)=>{
         res.render("peerevaluation.ejs");
     }
     else{
-    res.render("teamlogin.ejs");
+        res.redirect('/teamlogin');
     }
     
     })
 
-app.get("/peerlist",(req,res)=>{
+app.get("/peerlist",async (req,res)=>{
        
         if(req.session.user)
         {
-            res.render("peerevaluationlist.ejs");
+            const currentUserTeamName = req.session.user.team_name
+            // Filter out the current team from the list
+            const teamslist = await teams.find().exec();
+            const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
+            res.render("peerevaluationlist.ejs",{ filteredTeamsList });
         }
         else{
-        res.render("teamlogin.ejs");
+            res.redirect('/teamlogin');
         }
         })
    
@@ -178,7 +182,7 @@ app.get("/Schedule",(req,res)=>{
         res.render("schedule.ejs");
     }
     else{
-    res.render("teamlogin.ejs");
+    res.redirect('/teamlogin');
     }
             
             })        

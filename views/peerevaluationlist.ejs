@@ -54,20 +54,16 @@
 											<thead>
 												<tr>
 													<th>Team NAME</th>
-													<th>DOB</th>
-													<th>GENDER</th>
-													<th>Email</th>
                                                     <th>Give Rating</th>
 												</tr>
 											</thead>
 											<tbody>
                                                 <!-- loop the list here -->
-                                                        <tr><td></td>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td></td>
+												<% filteredTeamsList.forEach(function(item) { %>
+                                                        <tr><td><%= item['team_name'] %></td>
+														<td><a href="/evaluate">Give rating</a></td>
 														</tr>
+												 <% }); %>
 											</tbody>
 										</table>
 									</div>
