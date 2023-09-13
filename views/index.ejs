@@ -1,0 +1,172 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Welcome !</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+
+    <style>
+        #timer {
+          font-size: 96px; /* Increase the font size for larger numbers */
+          text-align: center;
+          
+        }
+      </style>
+    
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/materialdesignicons.min.css">
+
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles2.css">
+</head>
+
+<body>
+
+    <div id="loader-wrapper">
+        <div id="loader">
+            <div class="loader-ellips">
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+
+        <nav class="navbar navbar-expand-md home-menu hp4 fixed-header">
+            <div class="container-fluid">
+
+                <a class="logo-link smooth-menu header-logo" href="#home">
+                    <img src="assets/img/logo.png" class="logo logo-display" alt="Logo">
+                </a>
+
+
+                <div class="collapse navbar-collapse mainmenu" id="navbar-menu">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="smooth-menu nav-link" href="#home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="smooth-menu nav-link" href="#homepage">Login</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
+    <section class="hero-section">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-5 wow fadeInLeft" data-wow-delay="0.2s">
+                    <h1 style="color:#fff">SIH 2K23 INTERNAL HACKATHON</h1>
+                    <h2 style="color:#fff"></h2>
+                </div>
+                <div class="col-lg-7 wow fadeInRight" data-wow-delay="0.4s">
+                    <div id="timer" style="background-color: white;" ="hero-4-img">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="homepage" class="home-page">
+                <div class="text-center">
+                    <div id="timer"></div>
+                    <div class="text-center">                       
+                        <button class="btn btn-primary" id="startButton">Start</button>
+                    </div> 
+                    <audio id="music" src="assets/start.mp3" preload="auto"></audio>
+                </div>
+
+                        <script>
+                          let timer;
+                          let isRunning = false;
+                          let secondsRemaining = 24 * 60 * 60; 
+                      
+                          function startTimer() {
+                            if (!isRunning) {
+                              isRunning = true;
+                              timer = setInterval(updateTimer, 1000);
+                              document.getElementById("startButton").style.display = "none";
+                              document.getElementById("music").play();
+                              
+                            } 
+                          }
+                      
+
+                      
+                          function updateTimer() {
+                            if (secondsRemaining <= 0) {
+                              stopTimer();
+                              document.getElementById("timer").textContent = "00:00:00";
+                              
+                            } else {
+                              const hours = Math.floor(secondsRemaining / 3600);
+                              const minutes = Math.floor((secondsRemaining % 3600) / 60);
+                              const seconds = secondsRemaining % 60;
+                      
+                              const hoursDisplay = hours.toString().padStart(2, "0");
+                              const minutesDisplay = minutes.toString().padStart(2, "0");
+                              const secondsDisplay = seconds.toString().padStart(2, "0");
+                              
+                              document.getElementById("timer").textContent = `${hoursDisplay}:${minutesDisplay}:${secondsDisplay}`;
+                              secondsRemaining--;
+                            }
+                          }
+                       
+                          document.getElementById("startButton").addEventListener("click", startTimer);
+                        </script></section>
+
+<br><br><br><br>
+<div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                <div class="copyright-text">
+
+                    <a class="logo-link smooth-menu header-logo" href="#home">
+                        <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                    </a>
+                </div></div>
+                <div class="col-md-3">
+                    <div class="copyright-text">
+                        <a class="logo-link smooth-menu header-logo" href="#home">
+                            <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                        </a>
+                    </div></div>
+                    <div class="col-md-3">
+                        <div class="copyright-text">
+                            <a class="logo-link smooth-menu header-logo" href="#home">
+                                <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                            </a>
+                        </div></div>
+                <div class="col-md-3">
+                    <div class="copyright-text">
+                        <a class="logo-link smooth-menu header-logo" href="#home">
+                            <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                        </a>
+                    </div>
+            </div>
+            </div></div>
+                                            
+
+
+                        
+                        <script src="assets/js/jquery-3.6.0.min.js"></script>
+                        <script src="assets/js/bootstrap.bundle.min.js"></script>
+                        <script src="assets/js/wow.min.js"></script>
+                        <script src="assets/js/smooth-scroll.min.js"></script>
+                        <script src="assets/js/main.js"></script>
+
+
+</body>
+
+</html>
