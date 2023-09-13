@@ -100,11 +100,23 @@ res.render("index.ejs");
 })
 
 app.get("/teamlogin",(req,res)=>{
+    if(req.session.user)
+    {
+    res.redirect('/teamdashboard')
+    }
+    else{
     res.render("teamlogin.ejs");
+    }
 })
 app.get("/teamdashboard",(req,res)=>{
+    if(req.session.user)
+    {
     const teamName = req.session.user.team_name
     res.render("teamdashboard.ejs", { teamName });
+    }
+    else{
+        res.redirect('/teamlogin');
+    }
 })
 app.post("/teamlogin",async (req,res)=>{
 
@@ -139,15 +151,36 @@ app.get("/logout", (req, res) => {
 
 
 app.get("/evaluate",(req,res)=>{
-    res.render("peerevaluation.ejs");
+    if(req.session.user)
+    {
+        res.render("peerevaluation.ejs");
+    }
+    else{
+    res.render("teamlogin.ejs");
+    }
+    
     })
 
 app.get("/peerlist",(req,res)=>{
-        res.render("peerevaluationlist.ejs");
+       
+        if(req.session.user)
+        {
+            res.render("peerevaluationlist.ejs");
+        }
+        else{
+        res.render("teamlogin.ejs");
+        }
         })
    
-app.get("/list",(req,res)=>{
-            res.render("list.ejs");
+app.get("/Schedule",(req,res)=>{
+    if(req.session.user)
+    {
+        res.render("schedule.ejs");
+    }
+    else{
+    res.render("teamlogin.ejs");
+    }
+            
             })        
 
 app.listen(3000, function () {
