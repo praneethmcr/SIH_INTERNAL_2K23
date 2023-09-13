@@ -1,13 +1,43 @@
 const express = require("express");
+const session = require('express-session');
 const app = express();
 app.use(express.static("public"));
 app.set("view-engine","ejs");
-const bodyParser = require("body-parser")
-const parser = require('body-parser')
-app.use(bodyParser.urlencoded({ extended: true }))
+const bodyParser = require("body-parser");
+const parser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
 const WebSocket = require('ws');
 const http = require('http');
+const mongoose = require('mongoose');
+// Use a default session secret for development (not secure for production)
+const defaultSessionSecret = 'mydefaultsecretkey';
 
+app.use(session({
+    secret: process.env.SESSION_SECRET || defaultSessionSecret,
+    resave: false,
+    saveUninitialized: true
+}));
+
+mongoose.connect('mongodb+srv://saipraneethkambhampati800:PFTyvSKltwa4wBFB@cluster0.w2azzd2.mongodb.net/SIH_2K23_EVALUATION')
+.then(()=>{
+    console.log("mongodb conncted")
+})
+.catch(()=>{
+    console.log("failed to connect")
+})
+const TeamSchema = new mongoose.Schema(
+    {
+        team_name:{
+        type:String,
+        required:true
+        },
+        password:{
+            type:String,
+            required:true
+      }
+    }
+)
+const teams = new mongoose.model("teams",TeamSchema)
 
 // Create an HTTP server
 const server = http.createServer(app);
@@ -72,6 +102,42 @@ res.render("index.ejs");
 app.get("/teamlogin",(req,res)=>{
     res.render("teamlogin.ejs");
 })
+app.get("/teamdashboard",(req,res)=>{
+    const teamName = req.session.user.team_name
+    res.render("teamdashboard.ejs", { teamName });
+})
+app.post("/teamlogin",async (req,res)=>{
+
+try{
+const check = await teams.findOne({team_name:req.body.team_name,password:req.body.team_password})
+if (check) {
+    req.session.user = check;
+    res.redirect('/teamdashboard');
+} else {
+    console.log("Team not found");
+    res.redirect("/teamlogin");
+}
+
+
+}
+catch{
+    res.redirect("/teamlogin");
+}
+})
+
+app.get("/logout", (req, res) => {
+    // Destroy the user's session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+        } else {
+            // Redirect to the login page or any other appropriate page
+            res.redirect("/teamlogin");
+        }
+    });
+});
+
+
 app.get("/evaluate",(req,res)=>{
     res.render("peerevaluation.ejs");
     })

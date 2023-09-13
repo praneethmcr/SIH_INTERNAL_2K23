@@ -8,7 +8,6 @@
         #timer {
           font-size: 96px; /* Increase the font size for larger numbers */
           text-align: center;
-          
         }
       </style>
     
@@ -105,40 +104,47 @@
                 
                         document.getElementById('startButton').addEventListener('click', () => {
                             // Send a message to the server to start the timer
+                            document.getElementById("music").play();
+                            document.getElementById("startButton").style.display = "none";
                             ws.send(JSON.stringify({ action: 'startTimer' }));
                         });
                     </script></section>
 
-<br><br><br><br>
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
 <div class="container-fluid">
+    <br>
             <div class="row">
                 <div class="col-md-3">
-                <div class="copyright-text">
+                
 
                     <a class="logo-link smooth-menu header-logo" href="#home">
-                        <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                        <img src="assets/img/srkrlogo.png" class="logo logo-display" alt="Logo">
                     </a>
-                </div></div>
+                </div>
                 <div class="col-md-3">
-                    <div class="copyright-text">
+                    
                         <a class="logo-link smooth-menu header-logo" href="#home">
-                            <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
-                        </a>
-                    </div></div>
-                    <div class="col-md-3">
-                        <div class="copyright-text">
-                            <a class="logo-link smooth-menu header-logo" href="#home">
-                                <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
-                            </a>
-                        </div></div>
-                <div class="col-md-3">
-                    <div class="copyright-text">
-                        <a class="logo-link smooth-menu header-logo" href="#home">
-                            <img src="assets/img/gdsclogo.png" class="logo logo-display" width="148" height="40" alt="Logo">
+                            <img src="assets/img/logo.png" class="logo logo-display" alt="Logo">
                         </a>
                     </div>
-            </div>
-            </div></div>
+                    <div class="col-md-3">
+                        
+                            <a class="logo-link smooth-menu header-logo" href="#home">
+                                <img src="assets/img/idealablogo.png" class="logo logo-display" alt="Logo">
+                            </a>
+                        </div>
+                <div class="col-md-3">
+                    
+                        <a class="logo-link smooth-menu header-logo" href="#home">
+                            <img src="assets/img/gdsclogo.png" class="logo logo-display" alt="Logo">
+                        </a>
+                    </div>
+            
+            </div></div></div></footer>
                                             
 
 
