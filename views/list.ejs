@@ -1,0 +1,17 @@
+<div id="timer"></div>
+<script>
+    const ws = new WebSocket('ws://localhost:3838'); // WebSocket server address
+
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    ws.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        document.getElementById('timer').textContent = formatTime(data.timerValue);
+    });
+
+</script>

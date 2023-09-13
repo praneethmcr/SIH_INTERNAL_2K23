@@ -86,45 +86,28 @@
                     </div> 
                     <audio id="music" src="assets/start.mp3" preload="auto"></audio>
                 </div>
-
-                        <script>
-                          let timer;
-                          let isRunning = false;
-                          let secondsRemaining = 24 * 60 * 60; 
-                      
-                          function startTimer() {
-                            if (!isRunning) {
-                              isRunning = true;
-                              timer = setInterval(updateTimer, 1000);
-                              document.getElementById("startButton").style.display = "none";
-                              document.getElementById("music").play();
-                              
-                            } 
-                          }
-                      
-
-                      
-                          function updateTimer() {
-                            if (secondsRemaining <= 0) {
-                              stopTimer();
-                              document.getElementById("timer").textContent = "00:00:00";
-                              
-                            } else {
-                              const hours = Math.floor(secondsRemaining / 3600);
-                              const minutes = Math.floor((secondsRemaining % 3600) / 60);
-                              const seconds = secondsRemaining % 60;
-                      
-                              const hoursDisplay = hours.toString().padStart(2, "0");
-                              const minutesDisplay = minutes.toString().padStart(2, "0");
-                              const secondsDisplay = seconds.toString().padStart(2, "0");
-                              
-                              document.getElementById("timer").textContent = `${hoursDisplay}:${minutesDisplay}:${secondsDisplay}`;
-                              secondsRemaining--;
-                            }
-                          }
-                       
-                          document.getElementById("startButton").addEventListener("click", startTimer);
-                        </script></section>
+    
+                
+                    <script>
+                        const ws = new WebSocket('ws://localhost:3838'); // WebSocket server address
+                
+                        function formatTime(seconds) {
+                            const hours = Math.floor(seconds / 3600);
+                            const minutes = Math.floor((seconds % 3600) / 60);
+                            const secs = seconds % 60;
+                            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                        }
+                
+                        ws.addEventListener('message', (event) => {
+                            const data = JSON.parse(event.data);
+                            document.getElementById('timer').textContent = formatTime(data.timerValue);
+                        });
+                
+                        document.getElementById('startButton').addEventListener('click', () => {
+                            // Send a message to the server to start the timer
+                            ws.send(JSON.stringify({ action: 'startTimer' }));
+                        });
+                    </script></section>
 
 <br><br><br><br>
 <div class="container-fluid">
