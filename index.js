@@ -46,7 +46,11 @@ const JurySchema = new mongoose.Schema(
         password:{
             type:String,
             required:true
-      }
+      },
+      edition:{
+        type:String,
+        required:true
+  }
     }
 )
 
@@ -144,8 +148,24 @@ app.get("/juryteamslist",async (req,res)=>{
     try{
     if(req.session.edition)
     {
-    const juryTeamsList = await teams.find({type:req.session.edition}).exec();
+    const juryTeamsList = await teams.find({edition:req.session.edition.edition}).exec();
     res.render("juryevaluationlist1.ejs", { juryTeamsList });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
+
+app.get("/juryevaluate1",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const teamId = req.query._id;
+    res.render("juryevaluate3.ejs",{ teamId });
     }
     else{
         res.redirect('/jurylogin');

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title>Jury Round 3 Evaluation</title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" href="assets/img/favicon.png">
+	
+		<!-- Fontfamily -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&display=swap">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+		<!-- Select CSS -->
+		<link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
+    <body>
+        <div class="main-wrapper">
+			<%- include('jurymenu.ejs') -%>
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h5 class="page-title">Jury Evaluation</h5>
+							</div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="card card-table">
+                                        <div class="card-body">
+                                            <h4>Team Name: </h4>
+                                            <h4>PS ID:</h4>
+                                            <h4>Category:</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Round 1 Jury Rating:</h6>
+                                    <h6>Round 1 Jury Feedback</h6>
+                                    <h6>Round 1 Jury Assigned Tasks </h6>
+                                </div>
+                            </div>
+                            
+                            <div>
+                               </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6>Round 2 Jury Rating:</h6>
+                                        <h6>Round 2 Jury Feedback</h6>
+                                        <h6>Round 2 Jury Assigned Tasks </h6>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                   </div>
+                            </div>
+					<!-- /Page Header -->
+					<div class="row">
+						<div class="col-md-12 col-sm-12">
+						
+							<div class="card card-table">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-hover table-center">
+											<thead>
+												<tr>
+													</tr>Criteria</th>
+													<th>Evaluation Round 1</th>
+												</tr>
+											</thead>
+											<form action="/juryevaluate3" method="post">
+												<tbody>
+													<div class="form-group">
+														<div>
+														<textarea name="peerid" id="peerid" class="form-control" hidden><%= teamId %></textarea></div>
+													</div>
+													<tr>
+															
+															<td name="1">SOULTION APPROACH</td>
+															<td>
+																<div class="form-group">
+																<div>
+																	<select name="q1" class="form-control form-select"required>
+																		<option value="">-- Select --</option>
+																		<option value=1>1</option>
+																		<option value=2>2</option>
+																		<option value=3>3</option>
+																		<option value=4>4</option>
+																		<option value=5>5</option>
+																	</select>
+																</div>
+															</td>
+
+															</tr>
+															<tr>
+																
+																<td name="q2">CRITICALITY/ IMPACT/ AMBITIOUSNESS</td>
+																<td>
+																	<div class="form-group">
+																	<div>
+																		<select name="q2" class="form-control form-select"required>
+																			<option value="">-- Select --</option>
+																			<option value=1>1</option>
+																			<option value=2>2</option>
+																			<option value=3>3</option>
+																			<option value=4>4</option>
+																			<option value=5>5</option>
+																		</select>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>3</td>
+																<td name="3">TECHNOLOGY/ INNOVATION</td>
+																<td>
+																	<div class="form-group">
+																	<div>
+																		<select name="q3" class="form-control form-select"required>
+																			<option value="">-- Select --</option>
+																			<option value=1>1</option>
+																			<option value=2>2</option>
+																			<option value=3>3</option>
+																			<option value=4>4</option>
+																			<option value=5>5</option>
+																		</select>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>4</td>
+																<td name="q4">PLAN/ EXECUTION/ DEMO</td>
+																<td>
+																	<div class="form-group">
+																	<div>
+																		<select name="q4" class="form-control form-select"required>
+																			<option value="">-- Select --</option>
+																			<option value=1>1</option>
+																			<option value=2>2</option>
+																			<option value=3>3</option>
+																			<option value=4>4</option>
+																			<option value=5>5</option>
+																		</select>
+																	</div>
+																</td>
+															</tr>
+															<tr>
+																<td>5</td>
+																<td name="5">USER EXPERIENCE</td>
+																<td>
+																	<div class="form-group">
+																	<div>
+																		<select name="q5" class="form-control form-select"required>
+																			<option value="">-- Select --</option>
+																			<option value=1>1</option>
+																			<option value=2>2</option>
+																			<option value=3>3</option>
+																			<option value=4>4</option>
+																			<option value=5>5</option>
+																		</select>
+																	</div>
+																</td>
+															</tr>
+												</tbody>
+                                                <label>Assign Tasks</label>
+                                                <textarea></textarea>
+												<input type="submit" class="btn btn-primary" name="submit">
+											</form>
+										</table>
+									</div>
+								</div>
+							</div>							
+						</div>					
+					</div>
+				
+			</div>
+			<!-- /Page Wrapper -->
+			
+        </div>
+		<!-- /Main Wrapper -->
+		
+		<!-- jQuery -->
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		
+		<!-- Slimscroll JS -->
+		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+		<!-- Select2 JS -->
+		<script src="assets/plugins/select2/js/select2.min.js"></script>
+
+		<!-- Custom JS -->
+		<script src="assets/js/script.js"></script>
+		
+    </body>
+</html>

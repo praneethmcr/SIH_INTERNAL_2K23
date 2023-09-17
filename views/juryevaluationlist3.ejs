@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>Team Lists</title>
+        <title>Round 3 Evaluation</title>
 		
 		<!-- Favicon -->
         <link rel="shortcut icon" href="assets/img/favicon.png">
@@ -35,9 +35,9 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Teams List</h3>
+								<h3 class="page-title">Round 3 Evaluation</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item active">Teams List</li>
+									<li class="breadcrumb-item active">Round 3 Evaluation</li>
 								</ul>
 							</div>
 						</div>
@@ -59,9 +59,9 @@
 											</thead>
 											<tbody>
                                                 <!-- loop the list here -->
-												<% filteredTeamsList.forEach(function(item) { %>
+												<% juryTeamsList.forEach(function(item) { %>
                                                         <tr><td><%= item['team_name'] %></td>
-														<td><a href="/juryevaluate3?_id=<%= item._id %>">Give rating</a></td>
+														<td><a href="/juryevaluate1?_id=<%= item._id %>">Give rating</a></td>
 														</tr>
 												 <% }); %>
 											</tbody>
