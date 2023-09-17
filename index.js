@@ -243,15 +243,15 @@ app.get("/evaluate",(req,res)=>{
     
     })
 
-app.post("/evaluate",async (req,res)=>{
+app.post("/evaluate1",async (req,res)=>{
     const res1 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
     try {
-    const check = await peerevals.insertOne({user_id:session.user._id,result:String(res1),peerid:req.body.peerid,set:"1"})
-    if(check){
-        res.redirect('/evaluate')
+     const Newpeer = new peerevals ({user_id:req.session.user._id,peerid:req.body.peerid,result:String(res1),set:"1"})
+     await Newpeer.save();
+     res.redirect('/evaluate')
     }
-    }
-    catch{
+    catch(error){
+        console.error(error);
         res.redirect("/teamdashboard");
     }
     })
