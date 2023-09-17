@@ -1,8 +1,6 @@
 const express = require("express");
 const session = require('express-session');
 const bodyParser = require("body-parser");
-const WebSocket = require('ws');
-const http = require('http');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -11,7 +9,6 @@ app.use(express.static("public"));
 app.set("view-engine","ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Use a default session secret for development (not secure for production)
 const defaultSessionSecret = 'mydefaultsecretkey';
 
 app.use(session({
@@ -52,6 +49,8 @@ const JurySchema = new mongoose.Schema(
       }
     }
 )
+
+
 const PeerevaluationSchema = new mongoose.Schema(
     {
         user_id:{
@@ -97,57 +96,7 @@ const jury = new mongoose.model("juries",JurySchema)
 const peerevals = new mongoose.model("peerevals",PeerevaluationSchema)
 const rounds = new mongoose.model("rounds", roundSchema)
 
-// Create an HTTP server
-const server = http.createServer(app);
 
-// Create a WebSocket server by passing the HTTP server
-const wss = new WebSocket.Server({ server });
-
-// Initialize timer variables
-let timerValue = 24 * 60 * 60; // 24 hours in seconds
-let timerInterval;
-
-// Function to start the timer
-function startTimer() {
-    if (!timerInterval) {
-        timerInterval = setInterval(() => {
-            if (timerValue > 0) {
-                timerValue--;
-            }
-            broadcastTimer();
-        }, 1000);
-    }
-}
-
-// Function to broadcast timer updates to all connected clients
-function broadcastTimer() {
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ timerValue }));
-        }
-    });
-}
-
-
-
-// WebSocket connection handling
-wss.on('connection', (ws) => {
-    // Send the current timer value to the newly connected client
-    ws.send(JSON.stringify({ timerValue }));
-
-    // Listen for messages from the client (e.g., start timer)
-    ws.on('message', (message) => {
-        const data = JSON.parse(message);
-        if (data.action === 'startTimer') {
-            startTimer();
-        }
-    });
-});
-
-const PORT = process.env.PORT || 3838;
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
 
 app.get("/",(req,res)=>{
 res.render("index.ejs");
@@ -291,7 +240,7 @@ app.post("/evaluate1",async (req,res)=>{
     try {
      const Newpeer = new peerevals ({user_id:req.session.user._id,peerid:req.body.peerid,result:String(res1),set:"1"})
      await Newpeer.save();
-     res.redirect('/evaluate')
+     res.redirect('/peerlist')
     }
     catch(error){
         res.redirect("/teamdashboard");
@@ -302,11 +251,11 @@ app.get("/peerlist",async (req,res)=>{
         if(req.session.user)
         {
             const currentUserTeamName = req.session.user.team_name
-            // Filter out the current team from the list
+            const Id = await teams.find({team_name:currentUserTeamName},{_id:1})
+            const currentUserTeamNameId = String(Id[0]['_id'])
             const teamslist = await teams.find().exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
-            // const filteredTeamsList1 = filteredTeamsList.filter((team) => team.team_name !== currentUserTeamName);
-            res.render("peerevaluationlist.ejs",{ filteredTeamsList });
+
         }
         else{
             res.redirect('/teamlogin');
@@ -316,7 +265,10 @@ app.get("/peerlist",async (req,res)=>{
 app.get("/Schedule",(req,res)=>{
     if(req.session.user)
     {
-        res.render("schedule.ejs");
+        res.render("schedule.ejs", { sidebar:0 });
+    }
+    else if(req.session.edition){
+        res.render("schedule.ejs", { sidebar:1 });
     }
     else{
     res.redirect('/teamlogin');

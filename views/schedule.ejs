@@ -27,8 +27,13 @@
     <body>
 	
 	<!-- Main Wrapper -->
-	<div class="main-wrapper">	
-        <%- include('teammenu.ejs') -%>
+	<div class="main-wrapper">
+		<% if (sidebar == 0) { %>
+			<%- include('teammenu.ejs') %>
+		<% } else { %>
+			<%- include('jurymenu.ejs') %>
+		<% } %>
+		
 		<!-- Page Wrapper -->
 		<div class="page-wrapper">
 			<div class="content container-fluid">
