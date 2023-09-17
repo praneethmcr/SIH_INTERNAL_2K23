@@ -247,7 +247,7 @@ app.post("/evaluate1",async (req,res)=>{
     }
     })
 
-app.get("/peerlist",async (req,res)=>{ 
+    app.get("/peerlist",async (req,res)=>{ 
         if(req.session.user)
         {
             const currentUserTeamName = req.session.user.team_name
@@ -255,7 +255,13 @@ app.get("/peerlist",async (req,res)=>{
             const currentUserTeamNameId = String(Id[0]['_id'])
             const teamslist = await teams.find().exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
-
+            const alreadyEvaluated = await peerevals.find({user_id:currentUserTeamNameId},{peerid:1, _id:0})
+            const alreadyEvaluatedList = []
+            for(let id of alreadyEvaluated)
+            {
+                alreadyEvaluatedList.push(id['peerid'])
+            }
+            res.render("peerevaluationlist.ejs",{ filteredTeamsList, alreadyEvaluatedList });
         }
         else{
             res.redirect('/teamlogin');
