@@ -60,10 +60,15 @@
 											<tbody>
                                                 <!-- loop the list here -->
 												<% filteredTeamsList.forEach(function(item) { %>
-                                                        <tr><td><%= item['team_name'] %></td>
+													<tr>
+													  <td><%= item['team_name'] %></td>
+													  <% if (alreadyEvaluatedList.includes(String(item._id))) { %>
+														<td><a href="#">Already Given</a></td>
+													  <% } else { %>
 														<td><a href="/evaluate?_id=<%= item._id %>">Give rating</a></td>
-														</tr>
-												 <% }); %>
+													  <% } %>
+													</tr>
+												  <% }); %>												  
 											</tbody>
 										</table>
 									</div>

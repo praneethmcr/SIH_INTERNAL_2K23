@@ -1,8 +1,6 @@
 const express = require("express");
 const session = require('express-session');
 const bodyParser = require("body-parser");
-const WebSocket = require('ws');
-const http = require('http');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -11,7 +9,6 @@ app.use(express.static("public"));
 app.set("view-engine","ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Use a default session secret for development (not secure for production)
 const defaultSessionSecret = 'mydefaultsecretkey';
 
 app.use(session({
@@ -52,6 +49,8 @@ const JurySchema = new mongoose.Schema(
       }
     }
 )
+
+
 const PeerevaluationSchema = new mongoose.Schema(
     {
         user_id:{
@@ -198,7 +197,7 @@ app.post("/evaluate1",async (req,res)=>{
     try {
      const Newpeer = new peerevals ({user_id:req.session.user._id,peerid:req.body.peerid,result:String(res1),set:"1"})
      await Newpeer.save();
-     res.redirect('/evaluate')
+     res.redirect('/peerlist')
     }
     catch(error){
         console.error(error);
@@ -210,12 +209,17 @@ app.get("/peerlist",async (req,res)=>{
         if(req.session.user)
         {
             const currentUserTeamName = req.session.user.team_name
-            // Filter out the current team from the list
+            const Id = await teams.find({team_name:currentUserTeamName},{_id:1})
+            const currentUserTeamNameId = String(Id[0]['_id'])
             const teamslist = await teams.find().exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
-            console.log(filteredTeamsList)
-            // const filteredTeamsList1 = filteredTeamsList.filter((team) => team.team_name !== currentUserTeamName);
-            res.render("peerevaluationlist.ejs",{ filteredTeamsList });
+            const alreadyEvaluated = await peerevals.find({user_id:currentUserTeamNameId},{peerid:1, _id:0})
+            const alreadyEvaluatedList = []
+            for(let id of alreadyEvaluated)
+            {
+                alreadyEvaluatedList.push(id['peerid'])
+            }
+            res.render("peerevaluationlist.ejs",{ filteredTeamsList, alreadyEvaluatedList });
         }
         else{
             res.redirect('/teamlogin');
@@ -225,7 +229,10 @@ app.get("/peerlist",async (req,res)=>{
 app.get("/Schedule",(req,res)=>{
     if(req.session.user)
     {
-        res.render("schedule.ejs");
+        res.render("schedule.ejs", { sidebar:0 });
+    }
+    else if(req.session.edition){
+        res.render("schedule.ejs", { sidebar:1 });
     }
     else{
     res.redirect('/teamlogin');
