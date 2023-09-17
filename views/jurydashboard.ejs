@@ -36,7 +36,7 @@
 				<div class="page-header">
 					<div class="row">
 						<div class="col-sm-12">
-							<h3 class="page-title">Welcome to the Dashboard, <%= edition %>!</h3>
+							<h3 class="page-title">Welcome to the  <%= edition %> Edition Evaluation Dashboard!</h3>
 							<div id="timer"></div>
 							<script>
 								const ws = new WebSocket('ws://timer-edmt.onrender.com'); 
@@ -54,6 +54,7 @@
 								});
 							
 							</script>
+							
 						</div>
 					</div>
 				</div>
@@ -72,20 +73,43 @@
 									</div>						
 							  </div>
 						           <div class="card-body">
-                                        </div></div></div> 	
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="card card-table">
+												<div class="card-body">
+													<div class="table-responsive">
+														<table  class="table table-hover">
+															<thead>
+																<tr>
+																	<th>Round Number</th>
+																	<th>Start</th>
+																	<th>End</th>
+																</tr>
+															</thead>
+															<tbody>
+																<% round.forEach(function(rou) { %>
+																	<tr>
+																	  <td>Round - <%=rou['RoundNumber'] %></td>
+																	  <td><%=rou['start'] %></td>
+																	  <td><%=rou['end'] %></td>
+																	  <% if (rou['set']=='1') { %>
+																		<td><a href="#">Round Evaluation</a></td>
+																	  <% } else { %>
+																		<td><a href="#">Not Yet Started</a></td>
+																	  <% } %>
+																	</tr>
+																  <% }); %>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>							
+										</div>					
+									</div>			
+								   </div></div></div> 	
 								  
 							<div class="col-12 col-lg-4 col-xl-4 d-flex">				
-									<!-- Feed Activity -->
-									<div class="card flex-fill">
-										<div class="card-header">
-											<h5 class="card-title">Present Round</h5>
-										</div>
-										<div class="card-body">
-											<ul class="activity-feed">
-											</ul>
-										</div>					
-									</div>
-								</div>
+							
 							</div>
 
 					<!-- <div class="col-12 col-lg-4 col-xl-4 d-flex">

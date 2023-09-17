@@ -72,9 +72,30 @@ const PeerevaluationSchema = new mongoose.Schema(
             }
     }
 )
+const roundSchema = new mongoose.Schema(
+    {
+        RoundNumber:{
+            type:String,
+            required:true
+        },
+        set:{
+            type:String,
+            required:true
+            },
+        start:{
+            type:String,
+            required:true
+            },
+        end:{
+            type:String,
+            required:true
+            }
+    }
+)
 const teams = new mongoose.model("teams",TeamSchema)
 const jury = new mongoose.model("juries",JurySchema)
 const peerevals = new mongoose.model("peerevals",PeerevaluationSchema)
+const rounds = new mongoose.model("rounds", roundSchema)
 
 // Create an HTTP server
 const server = http.createServer(app);
@@ -152,17 +173,39 @@ app.get("/jurylogin",(req,res)=>{
     }
 })
 
-app.get("/jurydashboard",(req,res)=>{
+app.get("/jurydashboard",async (req,res)=>{
+    try{
     if(req.session.edition)
     {
     const edition = req.session.edition.edition
-    res.render("jurydashboard.ejs", { edition });
+    const round = await rounds.find().exec()
+    const juryTeamsList = await teams.find().exec();
+    res.render("jurydashboard.ejs", { edition , round });
     }
     else{
         res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
     }
 })
 
+app.get("/juryteamslist",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const juryTeamsList = await teams.find({type:req.session.edition}).exec();
+    res.render("juryevaluationlist1.ejs", { juryTeamsList });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
 
 app.post("/jurylogin",async (req,res)=>{
     try{
@@ -251,7 +294,6 @@ app.post("/evaluate1",async (req,res)=>{
      res.redirect('/evaluate')
     }
     catch(error){
-        console.error(error);
         res.redirect("/teamdashboard");
     }
     })
@@ -263,7 +305,6 @@ app.get("/peerlist",async (req,res)=>{
             // Filter out the current team from the list
             const teamslist = await teams.find().exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
-            console.log(filteredTeamsList)
             // const filteredTeamsList1 = filteredTeamsList.filter((team) => team.team_name !== currentUserTeamName);
             res.render("peerevaluationlist.ejs",{ filteredTeamsList });
         }
