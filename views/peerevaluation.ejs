@@ -40,7 +40,7 @@
 					</div>
 					<!-- /Page Header -->
 					<div class="row">
-						<div class="col-sm-12">
+						<div class="col-md-12 col-sm-12">
 						
 							<div class="card card-table">
 								<div class="card-body">
@@ -53,31 +53,39 @@
 													<th>Rating</th>
 												</tr>
 											</thead>
-											<form method="post">
-												<tbody><tr>
-																<td>1</td>
-																<td name="1"> Rate the project's level of innovation and creativity</td>
-																<td>
-																	<div class="form-group">
-																	<div>
-																		<select name="1" class="form-control form-select"required>
-																			<option value="">-- Select --</option>
-																			<option value=1>1</option>
-																			<option value=2>2</option>
-																			<option value=3>3</option>
-																			<option value=4>4</option>
-																			<option value=5>5</option>
-																		</select>
-																	</div>
-																</td>
+											<form action="/evaluate" method="post">
+												<tbody>
+													<div class="form-group">
+														<div>
+														<textarea name="peerid" id="peerid" class="form-control" hidden><%= itemId %></textarea></div>
+													</div>
+													<tr>
+															<td>1</td>
+															<td name="1">Rate the project's level of <br>
+																innovation and creativity</td>
+															<td>
+																<div class="form-group">
+																<div>
+																	<select name="q1" class="form-control form-select"required>
+																		<option value="">-- Select --</option>
+																		<option value=1>1</option>
+																		<option value=2>2</option>
+																		<option value=3>3</option>
+																		<option value=4>4</option>
+																		<option value=5>5</option>
+																	</select>
+																</div>
+															</td>
+
 															</tr>
 															<tr>
 																<td>2</td>
-																<td name="2">Rate the effective use of technologies and tools in the project</td>
+																<td name="q2">Rate the effective use of <br>
+																	technologies and tools in the project</td>
 																<td>
 																	<div class="form-group">
 																	<div>
-																		<select name="1" class="form-control form-select"required>
+																		<select name="q2" class="form-control form-select"required>
 																			<option value="">-- Select --</option>
 																			<option value=1>1</option>
 																			<option value=2>2</option>
@@ -90,11 +98,12 @@
 															</tr>
 															<tr>
 																<td>3</td>
-																<td name="3"> Rate the quality of the project's code and documentation</td>
+																<td name="3">Rate the visual aesthetics and<br>
+																	 appeal of the project.</td>
 																<td>
 																	<div class="form-group">
 																	<div>
-																		<select name="1" class="form-control form-select"required>
+																		<select name="q3" class="form-control form-select"required>
 																			<option value="">-- Select --</option>
 																			<option value=1>1</option>
 																			<option value=2>2</option>
@@ -107,11 +116,11 @@
 															</tr>
 															<tr>
 																<td>4</td>
-																<td name="4"> Rate the project's potential for scalability and future development</td>
+																<td name="q4"> Rate the project's potential for <br>scalability and future development</td>
 																<td>
 																	<div class="form-group">
 																	<div>
-																		<select name="1" class="form-control form-select"required>
+																		<select name="q4" class="form-control form-select"required>
 																			<option value="">-- Select --</option>
 																			<option value=1>1</option>
 																			<option value=2>2</option>
@@ -124,11 +133,11 @@
 															</tr>
 															<tr>
 																<td>5</td>
-																<td name="5">Rate the project's efficiency and performance in achieving its goals</td>
+																<td name="5">Rate the project's efficiency and<br>performance in achieving its goals</td>
 																<td>
 																	<div class="form-group">
 																	<div>
-																		<select name="1" class="form-control form-select"required>
+																		<select name="q5" class="form-control form-select"required>
 																			<option value="">-- Select --</option>
 																			<option value=1>1</option>
 																			<option value=2>2</option>

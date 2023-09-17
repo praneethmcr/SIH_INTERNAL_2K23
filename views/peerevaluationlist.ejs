@@ -61,7 +61,7 @@
                                                 <!-- loop the list here -->
 												<% filteredTeamsList.forEach(function(item) { %>
                                                         <tr><td><%= item['team_name'] %></td>
-														<td><a href="/evaluate">Give rating</a></td>
+														<td><a href="/evaluate?_id=<%= item._id %>">Give rating</a></td>
 														</tr>
 												 <% }); %>
 											</tbody>
