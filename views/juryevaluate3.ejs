@@ -4,25 +4,26 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Jury Round 3 Evaluation</title>
-		
+		    <!-- Include jQuery -->
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<!-- Favicon -->
-        <link rel="shortcut icon" href="assets/img/favicon.png">
+        <link rel="shortcut icon" href="/assets/img/favicon.png">
 	
 		<!-- Fontfamily -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&display=swap">
 		
 		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
 		
 		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+		<link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
 		<!-- Select CSS -->
-		<link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="/assets/plugins/select2/css/select2.min.css">
 		
 		<!-- Main CSS -->
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
     </head>
     <body>
         <div class="main-wrapper">
@@ -32,15 +33,15 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h5 class="page-title">Jury Evaluation</h5>
+								<h5 class="page-title">Jury Round 3 Evaluation</h5>
 							</div>
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="card card-table">
                                         <div class="card-body">
-                                            <h4>Team Name: </h4>
-                                            <h4>PS ID:</h4>
-                                            <h4>Category:</h4>
+                                            <h6>Team Name: </h6>
+                                            <h6>PS ID:</h6>
+                                            <h6>Category:</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +66,6 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Round 2 Jury Rating:</h6>
-                                        <h6>Round 2 Jury Feedback</h6>
                                         <h6>Round 2 Jury Assigned Tasks </h6>
                                     </div>
                                 </div>
@@ -74,24 +74,52 @@
                                    </div>
                             </div>
 					<!-- /Page Header -->
+					<!-- /Page Header -->
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
-						
 							<div class="card card-table">
 								<div class="card-body">
 									<div class="table-responsive">
-										<table class="table table-hover table-center">
+                                        <form action="/juryevaluation3" method="post">
+											
+												<!-- Initial task input field -->
+												<div class="row">
+													<div class="form-group">
+													<label>Round2 Feedback</label>
+													<textarea class="form-control" name="feedback", id ="feedback"></textarea>
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+														<div class="form-group"></div>
+														<label>Enter Task 1:</label>
+														<div class="input-group">
+															<input type="text" class="form-control" name="task[0]">
+															<button class="btn btn-primary" type="button" id="addTask">+</button>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+														<div class="form-group" id = "taskFields"></div>
+				
+													</div>
+												</div>
+
+												
+
+								
+										<table class="table table-center">
 											<thead>
 												<tr>
-													</tr>Criteria</th>
-													<th>Evaluation Round 1</th>
+													<th>Criteria</th>
+													<th>Evaluation Round 3</th>
 												</tr>
 											</thead>
-											<form action="/juryevaluate3" method="post">
+
 												<tbody>
 													<div class="form-group">
 														<div>
-														<textarea name="peerid" id="peerid" class="form-control" hidden><%= teamId %></textarea></div>
+														<textarea name="teamid" id="teamid" class="form-control" hidden><%= teamId %></textarea></div>
 													</div>
 													<tr>
 															
@@ -129,7 +157,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td>3</td>
+																
 																<td name="3">TECHNOLOGY/ INNOVATION</td>
 																<td>
 																	<div class="form-group">
@@ -146,7 +174,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td>4</td>
+																
 																<td name="q4">PLAN/ EXECUTION/ DEMO</td>
 																<td>
 																	<div class="form-group">
@@ -163,7 +191,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td>5</td>
+															
 																<td name="5">USER EXPERIENCE</td>
 																<td>
 																	<div class="form-group">
@@ -178,13 +206,17 @@
 																		</select>
 																	</div>
 																</td>
-															</tr>
-												</tbody>
-                                                <label>Assign Tasks</label>
-                                                <textarea></textarea>
-												<input type="submit" class="btn btn-primary" name="submit">
-											</form>
+															</tr>     
+												</tbody>	
 										</table>
+
+                                        <div class="row">
+                                            <div class="text-end">
+                                                <input type="submit"  class="btn btn-primary" name="submit">
+                                            </div>
+                                        </div>
+
+                                    </form>
 									</div>
 								</div>
 							</div>							
@@ -196,10 +228,37 @@
 			
         </div>
 		<!-- /Main Wrapper -->
+		<script>
+			window.addEventListener("beforeunload", function(event){
+				event.preventDefault();
+				event.returnValue= "Are you sure you want to exit"
+			});
+		</script>
+
+			<script>
+				let taskCount = 1; // Initialize the task count
+					// Function to add a new task input field
+					$("#addTask").click(function() {
+						// Create a new task input field with a numbered label
+						const taskField = `
+								<label>Enter Task ${taskCount+1}:</label>
+								<div class="input-group">
+									<input type="text" class="form-control" name="task[${taskCount}]">
+								
+								</div>
+						`;
 		
+						// Append the task field to the taskFields div
+						$("#taskFields").append(taskField);
+		
+						// Increment the task count
+						taskCount++;
+					});
+		
+				</script>
 		<!-- jQuery -->
         <script src="assets/js/jquery-3.6.0.min.js"></script>
-		
+
 		<!-- Bootstrap Core JS -->
         <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 		

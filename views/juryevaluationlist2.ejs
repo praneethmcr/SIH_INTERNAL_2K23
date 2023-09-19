@@ -35,9 +35,9 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Round 2 Evaluation</h3>
+								<h3 class="page-title">Round 2 Jury Evaluation</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item active">Round 2 Evaluation</li>
+									<li class="breadcrumb-item active">Round 2 Jury Evaluation</li>
 								</ul>
 							</div>
 						</div>
@@ -60,10 +60,15 @@
 											<tbody>
                                                 <!-- loop the list here -->
 												<% juryTeamsList.forEach(function(item) { %>
-                                                        <tr><td><%= item['team_name'] %></td>
-														<td><a href="/juryevaluate2?_id=<%= item._id %>">Give rating</a></td>
-														</tr>
-												 <% }); %>
+													<tr><td><%= item['team_name'] %></td>
+														<% if (juryalreadyEvaluatedList.includes(String(item['_id']))) { %>
+															<td>Already Given</td>
+														  <% } else { %>
+															<td><a href="/juryevaluate2\?_id=<%= item['_id'] %>">Give rating</a></td>
+														  <% } %>
+													
+													</tr>
+											 <% }); %>
 											</tbody>
 										</table>
 									</div>

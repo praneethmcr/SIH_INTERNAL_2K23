@@ -3,197 +3,236 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>Jury Round 1 Evaluation</title>
-		
+        <title>Jury  Evaluation  Round 1</title>
+		<!-- Include jQuery -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<!-- Favicon -->
-        <link rel="shortcut icon" href="assets/img/favicon.png">
+        <link rel="shortcut icon" href="/assets/img/favicon.png">
 	
 		<!-- Fontfamily -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&display=swap">
 		
 		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
 		
 		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+		<link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
 		<!-- Select CSS -->
-		<link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="/assets/plugins/select2/css/select2.min.css">
 		
 		<!-- Main CSS -->
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
     </head>
     <body>
         <div class="main-wrapper">
 			<%- include('jurymenu.ejs') -%>
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-					<div class="page-header">
-						<div class="row align-items-center">
-							<div class="col">
-								<h5 class="page-title">Jury Evaluation Round 1</h5>
-							</div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="card card-table">
-                                        <div class="card-body">
-                                            <h6>Team Name: </h6>
-                                            <h6>PS ID:</h6>
-                                            <h6>Category:</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-					<div class="row">
-						<div class="col-md-12 col-sm-12">
-							<div class="card card-table">
-								<div class="card-body">
-									<div class="table-responsive">
-                                        <form action="/juryevaluate1" method="post">
-                                            <div class="form-group">
-                                                <label>Assign Tasks </label>
-                                                <div>
-                                                    <textarea name="tasks" id="tasks" class="form-control" ></textarea></div>
-                                            </div>
-										<table class="table table-center">
-											<thead>
-												<tr>
-													<th>Criteria</th>
-													<th>Evaluation Round 1</th>
-												</tr>
-											</thead>
-
-												<tbody>
-													<div class="form-group">
-														<div>
-														<textarea name="peerid" id="peerid" class="form-control" hidden><%= teamId %></textarea></div>
-													</div>
-													<tr>
-															
-															<td name="1">SOULTION APPROACH</td>
-															<td>
-																<div class="form-group">
-																<div>
-																	<select name="q1" class="form-control form-select"required>
-																		<option value="">-- Select --</option>
-																		<option value=1>1</option>
-																		<option value=2>2</option>
-																		<option value=3>3</option>
-																		<option value=4>4</option>
-																		<option value=5>5</option>
-																	</select>
-																</div>
-															</td>
-
-															</tr>
-															<tr>
-																
-																<td name="q2">CRITICALITY/ IMPACT/ AMBITIOUSNESS</td>
-																<td>
-																	<div class="form-group">
-																	<div>
-																		<select name="q2" class="form-control form-select"required>
-																			<option value="">-- Select --</option>
-																			<option value=1>1</option>
-																			<option value=2>2</option>
-																			<option value=3>3</option>
-																			<option value=4>4</option>
-																			<option value=5>5</option>
-																		</select>
-																	</div>
-																</td>
-															</tr>
-															<tr>
-																
-																<td name="3">TECHNOLOGY/ INNOVATION</td>
-																<td>
-																	<div class="form-group">
-																	<div>
-																		<select name="q3" class="form-control form-select"required>
-																			<option value="">-- Select --</option>
-																			<option value=1>1</option>
-																			<option value=2>2</option>
-																			<option value=3>3</option>
-																			<option value=4>4</option>
-																			<option value=5>5</option>
-																		</select>
-																	</div>
-																</td>
-															</tr>
-															<tr>
-																
-																<td name="q4">PLAN/ EXECUTION/ DEMO</td>
-																<td>
-																	<div class="form-group">
-																	<div>
-																		<select name="q4" class="form-control form-select"required>
-																			<option value="">-- Select --</option>
-																			<option value=1>1</option>
-																			<option value=2>2</option>
-																			<option value=3>3</option>
-																			<option value=4>4</option>
-																			<option value=5>5</option>
-																		</select>
-																	</div>
-																</td>
-															</tr>
-															<tr>
-															
-																<td name="5">USER EXPERIENCE</td>
-																<td>
-																	<div class="form-group">
-																	<div>
-																		<select name="q5" class="form-control form-select"required>
-																			<option value="">-- Select --</option>
-																			<option value=1>1</option>
-																			<option value=2>2</option>
-																			<option value=3>3</option>
-																			<option value=4>4</option>
-																			<option value=5>5</option>
-																		</select>
-																	</div>
-																</td>
-															</tr>     
-												</tbody>	
-										</table>
-
-                                        <div class="row">
-                                            <div class="text-end">
-                                                <input type="submit"  class="btn btn-primary" name="submit">
-                                            </div>
-                                        </div>
-
-                                    </form>
+					<div class="page-wrapper">
+						<div class="content container-fluid">
+							<div class="page-header">
+								<div class="row align-items-center">
+									<div class="col">
+										<h5 class="page-title">Jury Evaluation Round 1</h5>
+									</div>
+									<div class="row">
+										<div class="col-md-12 col-sm-12">
+											<div class="card card-table">
+												<div class="card-body">
+													<h6>Team Name: </h6>
+													<h6>PS ID:</h6>
+													<h6>Category:</h6>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>							
-						</div>					
+							</div>
+							<!-- /Page Header -->
+							<div class="row">
+								<div class="col-md-12 col-sm-12">
+									<div class="card card-table">
+										<div class="card-body">
+											<div class="table-responsive">
+												<form action="/juryevaluation1" method="post">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="form-group"></div>
+															<label>Enter Task 1:</label>
+															<div class="input-group">
+																<input type="text" class="form-control" name="task[0]">
+																<button class="btn btn-primary" type="button" id="addTask">+</button>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-12">
+															<div class="form-group" id = "taskFields"></div>
+					
+														</div>
+													</div>
+												<table class="table table-center">
+													<thead>
+														<tr>
+															<th>Criteria</th>
+															<th>Evaluation Round 1</th>
+														</tr>
+													</thead>
+		
+														<tbody>
+															<div class="form-group">
+																<div>
+																<textarea name="teamid" id="teamid" class="form-control" hidden><%= teamId %></textarea></div>
+															</div>
+															<tr>
+																	
+																	<td name="1">SOULTION APPROACH</td>
+																	<td>
+																		<div class="form-group">
+																		<div>
+																			<select name="q1" class="form-control form-select"required>
+																				<option value="">-- Select --</option>
+																				<option value=1>1</option>
+																				<option value=2>2</option>
+																				<option value=3>3</option>
+																				<option value=4>4</option>
+																				<option value=5>5</option>
+																			</select>
+																		</div>
+																	</td>
+		
+																	</tr>
+																	<tr>
+																		
+																		<td name="q2">CRITICALITY/ IMPACT/ AMBITIOUSNESS</td>
+																		<td>
+																			<div class="form-group">
+																			<div>
+																				<select name="q2" class="form-control form-select"required>
+																					<option value="">-- Select --</option>
+																					<option value=1>1</option>
+																					<option value=2>2</option>
+																					<option value=3>3</option>
+																					<option value=4>4</option>
+																					<option value=5>5</option>
+																				</select>
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		
+																		<td name="3">TECHNOLOGY/ INNOVATION</td>
+																		<td>
+																			<div class="form-group">
+																			<div>
+																				<select name="q3" class="form-control form-select"required>
+																					<option value="">-- Select --</option>
+																					<option value=1>1</option>
+																					<option value=2>2</option>
+																					<option value=3>3</option>
+																					<option value=4>4</option>
+																					<option value=5>5</option>
+																				</select>
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		
+																		<td name="q4">PLAN/ EXECUTION/ DEMO</td>
+																		<td>
+																			<div class="form-group">
+																			<div>
+																				<select name="q4" class="form-control form-select"required>
+																					<option value="">-- Select --</option>
+																					<option value=1>1</option>
+																					<option value=2>2</option>
+																					<option value=3>3</option>
+																					<option value=4>4</option>
+																					<option value=5>5</option>
+																				</select>
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																	
+																		<td name="5">USER EXPERIENCE</td>
+																		<td>
+																			<div class="form-group">
+																			<div>
+																				<select name="q5" class="form-control form-select"required>
+																					<option value="">-- Select --</option>
+																					<option value=1>1</option>
+																					<option value=2>2</option>
+																					<option value=3>3</option>
+																					<option value=4>4</option>
+																					<option value=5>5</option>
+																				</select>
+																			</div>
+																		</td>
+																	</tr>     
+														</tbody>	
+												</table>
+		
+												<div class="row">
+													<div class="text-end">
+														<input type="submit"  class="btn btn-primary" name="submit">
+													</div>
+												</div>
+		
+											</form>
+											</div>
+										</div>
+									</div>							
+								</div>					
+							</div>
+						
 					</div>
-				
-			</div>
+					
 			<!-- /Page Wrapper -->
 			
         </div>
 		<!-- /Main Wrapper -->
-		
+		<script>
+			let taskCount = 1; // Initialize the task count
+				// Function to add a new task input field
+				$("#addTask").click(function() {
+					// Create a new task input field with a numbered label
+					const taskField = `
+							<label>Enter Task ${taskCount+1}:</label>
+							<div class="input-group">
+								<input type="text" class="form-control" name="task[${taskCount}]">
+							
+							</div>
+					`;
+	
+					// Append the task field to the taskFields div
+					$("#taskFields").append(taskField);
+	
+					// Increment the task count
+					taskCount++;
+				});
+	
+			</script>
+					<script>
+						window.addEventListener("beforeunload", function(event){
+							event.preventDefault;
+							event.returnValue= "Are you sure you want to exit"
+						});
+					</script>
 		<!-- jQuery -->
-        <script src="assets/js/jquery-3.6.0.min.js"></script>
+        <script src="/assets/js/jquery-3.6.0.min.js"></script>
 		
 		<!-- Bootstrap Core JS -->
-        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 		
 		<!-- Slimscroll JS -->
-		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
 		<!-- Select2 JS -->
-		<script src="assets/plugins/select2/js/select2.min.js"></script>
+		<script src="/assets/plugins/select2/js/select2.min.js"></script>
 
 		<!-- Custom JS -->
-		<script src="assets/js/script.js"></script>
+		<script src="/assets/js/script.js"></script>
 		
     </body>
 </html>

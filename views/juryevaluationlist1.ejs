@@ -61,7 +61,12 @@
                                                 <!-- loop the list here -->
 												<% juryTeamsList.forEach(function(item) { %>
                                                         <tr><td><%= item['team_name'] %></td>
-														<td><a href="/juryevaluate?_id=<%= item._id %>">Give rating</a></td>
+															<% if (juryalreadyEvaluatedList.includes(String(item['_id']))) { %>
+																<td>Already Given</td>
+															  <% } else { %>
+																<td><a href="/juryevaluate1\?_id=<%= item['_id'] %>">Give rating</a></td>
+															  <% } %>
+														
 														</tr>
 												 <% }); %>
 											</tbody>
@@ -78,7 +83,7 @@
 			
         </div>
 		<!-- /Main Wrapper -->
-		
+	
 		<!-- jQuery -->
         <script src="assets/js/jquery-3.6.0.min.js"></script>
 		

@@ -5,9 +5,11 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
+
 app.set("view-engine","ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const defaultSessionSecret = 'mydefaultsecretkey';
 
@@ -54,7 +56,39 @@ const JurySchema = new mongoose.Schema(
     }
 )
 
+const juryEvalschema = new mongoose.Schema(
+    {
+        teamid:{
+            type:String,
+            required:true
+        },
+        result:{
+            type:Number,
+            required:true
+        },
+        tasksr1:{
+            type:Array,
+            required:true
+        },
+        tasksr2:{
+            type:Array,
+            required:true
+        },
+        tasksr3:{
+            type:Array,
+            required:true
+        }, 
+        feedback1:{
+            type:String,
+            required:true
+        },
+        feedback2:{
+            type:String,
+            required:true
+        }
 
+    }
+)
 const PeerevaluationSchema = new mongoose.Schema(
     {
         user_id:{
@@ -82,7 +116,8 @@ const roundSchema = new mongoose.Schema(
             required:true
         },
         set:{
-            type:String,
+            type:Number
+            ,
             required:true
             },
         start:{
@@ -99,7 +134,7 @@ const teams = new mongoose.model("teams",TeamSchema)
 const jury = new mongoose.model("juries",JurySchema)
 const peerevals = new mongoose.model("peerevals",PeerevaluationSchema)
 const rounds = new mongoose.model("rounds", roundSchema)
-
+const juryevals = new mongoose.model("juryevals", juryEvalschema)
 
 
 app.get("/",(req,res)=>{
@@ -132,7 +167,6 @@ app.get("/jurydashboard",async (req,res)=>{
     {
     const edition = req.session.edition.edition
     const round = await rounds.find().exec()
-    const juryTeamsList = await teams.find().exec();
     res.render("jurydashboard.ejs", { edition , round });
     }
     else{
@@ -144,12 +178,18 @@ app.get("/jurydashboard",async (req,res)=>{
     }
 })
 
-app.get("/juryteamslist",async (req,res)=>{
+app.get("/juryevaluationlist1",async (req,res)=>{
     try{
     if(req.session.edition)
     {
     const juryTeamsList = await teams.find({edition:req.session.edition.edition}).exec();
-    res.render("juryevaluationlist1.ejs", { juryTeamsList });
+    const juryalreadyEvaluate = await juryevals.find({},{teamid:1,_id:0}).exec();
+    const juryalreadyEvaluatedList=[]
+    for(let id of juryalreadyEvaluate)
+    {
+        juryalreadyEvaluatedList.push(id['teamid'])
+    }
+    res.render("juryevaluationlist1.ejs", { juryTeamsList, juryalreadyEvaluatedList });
     }
     else{
         res.redirect('/jurylogin');
@@ -165,6 +205,115 @@ app.get("/juryevaluate1",async (req,res)=>{
     if(req.session.edition)
     {
     const teamId = req.query._id;
+    
+    res.render("juryevaluate1.ejs",{ teamId });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
+
+app.post("/juryevaluation1",async (req,res)=>{
+    try{
+        const jres1 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
+        const tasks = req.body.task
+        
+        const jcheck = new juryevals({teamid:req.body.teamid,result:jres1,tasksr1:tasks,tasksr2:['hii'],tasksr3:['hii'],feedback1:" ",feedback2:" "})
+        await jcheck.save()
+        res.redirect('/juryevaluationlist1')
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/jurydashboard')
+    }
+})
+
+app.get("/juryevaluationlist2",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const juryTeamsList = await teams.find({edition:req.session.edition.edition}).exec();
+    const juryalreadyEvaluate = await juryevals.find({__v:1},{teamid:1,_id:0}).exec();
+    const juryalreadyEvaluatedList=[]
+    for(let id of juryalreadyEvaluate)
+    {
+        juryalreadyEvaluatedList.push(id['teamid'])
+    }
+    res.render("juryevaluationlist2.ejs", { juryTeamsList, juryalreadyEvaluatedList });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
+
+app.get("/juryevaluate2",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const teamId = req.query._id;
+    
+    res.render("juryevaluate2.ejs",{ teamId });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
+
+app.post("/juryevaluation2",async (req,res)=>{
+    try{
+        const jres2 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
+        const tasks2 = req.body.task
+        const teamid = req.body.teamid
+        const feedback = req.body.feedback
+        const jcheck2 = await juryevals.updateOne({teamid:teamid},{tasksr2:tasks2,feedback1:feedback,$inc:{result:jres2},__v:1}).exec()
+        res.redirect('/juryevaluationlist2')
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/jurydashboard')
+    }
+})
+
+app.get("/juryevaluationlist3",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const juryTeamsList = await teams.find({edition:req.session.edition.edition}).exec();
+    const juryalreadyEvaluate = await juryevals.find({__v:2},{teamid:1,_id:0}).exec();
+    const juryalreadyEvaluatedList=[]
+    for(let id of juryalreadyEvaluate)
+    {
+        juryalreadyEvaluatedList.push(id['teamid'])
+    }
+    res.render("juryevaluationlist3.ejs", { juryTeamsList, juryalreadyEvaluatedList });
+    }
+    else{
+        res.redirect('/jurylogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/jurylogin')
+    }
+})
+
+app.get("/juryevaluate3",async (req,res)=>{
+    try{
+    if(req.session.edition)
+    {
+    const teamId = req.query._id;
+    
     res.render("juryevaluate3.ejs",{ teamId });
     }
     else{
@@ -176,6 +325,20 @@ app.get("/juryevaluate1",async (req,res)=>{
     }
 })
 
+app.post("/juryevaluation3",async (req,res)=>{
+    try{
+        const jres2 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
+        const tasks3 = req.body.task
+        const feedback2 = req.body.feedback
+        const teamid = req.body.teamid
+        const jcheck3 = await juryevals.updateOne({teamid:teamid},{tasksr3:tasks3,__v:2,feedback2:feedback2,$inc:{result:jres2}}).exec()
+        res.redirect('/juryevaluationlist3')
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/jurydashboard')
+    }
+})
 app.post("/jurylogin",async (req,res)=>{
     try{
     const check1 = await jury.findOne({edition:req.body.jury_name,password:req.body.jury_password})
