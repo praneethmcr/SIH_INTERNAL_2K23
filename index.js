@@ -205,8 +205,8 @@ app.get("/juryevaluate1",async (req,res)=>{
     if(req.session.edition)
     {
     const teamId = req.query._id;
-    
-    res.render("juryevaluate1.ejs",{ teamId });
+    const jteam1 = await teams.find({_id:teamId})
+    res.render("juryevaluate1.ejs",{teamId, jteam1 });
     }
     else{
         res.redirect('/jurylogin');
@@ -221,7 +221,6 @@ app.post("/juryevaluation1",async (req,res)=>{
     try{
         const jres1 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
         const tasks = req.body.task
-        
         const jcheck = new juryevals({teamid:req.body.teamid,result:jres1,tasksr1:tasks,tasksr2:['hii'],tasksr3:['hii'],feedback1:" ",feedback2:" "})
         await jcheck.save()
         res.redirect('/juryevaluationlist1')
@@ -259,8 +258,9 @@ app.get("/juryevaluate2",async (req,res)=>{
     if(req.session.edition)
     {
     const teamId = req.query._id;
-    
-    res.render("juryevaluate2.ejs",{ teamId });
+    const jteam2 = await teams.find({_id:teamId})
+    const jdata2 = await juryevals.find({teamid:teamId})
+    res.render("juryevaluate2.ejs",{ teamId,jteam2,jdata2});
     }
     else{
         res.redirect('/jurylogin');
@@ -313,8 +313,9 @@ app.get("/juryevaluate3",async (req,res)=>{
     if(req.session.edition)
     {
     const teamId = req.query._id;
-    
-    res.render("juryevaluate3.ejs",{ teamId });
+    const jteam3 = await teams.find({_id:teamId})
+    const jdata3 = await juryevals.find({teamid:teamId})
+    res.render("juryevaluate3.ejs",{ teamId,jteam3,jdata3});
     }
     else{
         res.redirect('/jurylogin');
@@ -434,9 +435,9 @@ app.post("/evaluate1",async (req,res)=>{
         if(req.session.user)
         {
             const currentUserTeamName = req.session.user.team_name
-            const Id = await teams.find({team_name:currentUserTeamName},{_id:1})
+            const Id = await teams.find({team_name:currentUserTeamName},{_id:1,edition:1})
             const currentUserTeamNameId = String(Id[0]['_id'])
-            const teamslist = await teams.find().exec();
+            const teamslist = await teams.find({edition:Id[0]['edition']}).exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
             const alreadyEvaluated = await peerevals.find({user_id:currentUserTeamNameId},{peerid:1, _id:0})
             const alreadyEvaluatedList = []

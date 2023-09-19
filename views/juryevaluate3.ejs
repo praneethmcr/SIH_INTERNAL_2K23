@@ -35,41 +35,46 @@
 							<div class="col">
 								<h5 class="page-title">Jury Round 3 Evaluation</h5>
 							</div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="card card-table">
-                                        <div class="card-body">
-                                            <h6>Team Name: </h6>
-                                            <h6>PS ID:</h6>
-                                            <h6>Category:</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-						</div>
 					</div>
-                    <div class="row">
+
                         <div class="form-group">
+
                             <div class="card">
                                 <div class="card-body">
-                                    <h6>Round 1 Jury Rating:</h6>
-                                    <h6>Round 1 Jury Feedback</h6>
-                                    <h6>Round 1 Jury Assigned Tasks </h6>
-                                </div>
-                            </div>
-                            
-                            <div>
-                               </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6>Round 2 Jury Rating:</h6>
-                                        <h6>Round 2 Jury Assigned Tasks </h6>
+									<h6>Team Name: <b><%= jteam3[0]['team_name'] %></b></h6>
+									<h6>PS ID:</h6>
+									<h6>Category:</h6>
+                                    <h6>Overall 2 Rounds Scoring:<b> <%= jdata3[0]['result'] %>/50</b></h6>
+									<div class="row">
+										<div class="col-md-6">
+						
+									<div class="card">
+										<div class="card-body">
+											<h6><b>ROUND 1 EVALUATION DETAILS</b></h6>
+											<h6>Round 1 Jury Feedback: <b><%= jdata3[0]['feedback1'] %></b></h6>
+
+											<h6>Round 1 Jury Assigned Tasks</h6>
+											<ul>
+											<% jdata3[0]['tasksr1'].forEach(function(item) { %>
+												<li><%= item %></li>
+											<% }); %>
+										</ul>
+										</div>
+									</div>
+									<div class="card">
+											<div class="col-md-6">
+											<div class="card-body">
+												<h6><b>ROUND 2 EVALUATION DETAILS</b></h6>
+												<h6>Round 2 Jury Assigned Tasks</h6>
+												<% jdata3[0]['tasksr2'].forEach(function(item) { %>
+													<h6><%= item %></h6>
+												<% }); %>
+											</div>
+											</div>
+										</div>
                                     </div>
                                 </div>
-                                
+							</div>
                                 <div>
                                    </div>
                             </div>
@@ -257,19 +262,19 @@
 		
 				</script>
 		<!-- jQuery -->
-        <script src="assets/js/jquery-3.6.0.min.js"></script>
+        <script src="/assets/js/jquery-3.6.0.min.js"></script>
 
 		<!-- Bootstrap Core JS -->
-        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 		
 		<!-- Slimscroll JS -->
-		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
 		<!-- Select2 JS -->
-		<script src="assets/plugins/select2/js/select2.min.js"></script>
+		<script src="/assets/plugins/select2/js/select2.min.js"></script>
 
 		<!-- Custom JS -->
-		<script src="assets/js/script.js"></script>
+		<script src="/assets/js/script.js"></script>
 		
     </body>
 </html>
