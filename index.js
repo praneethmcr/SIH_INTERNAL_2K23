@@ -207,14 +207,37 @@ app.get("/teamlogin",(req,res)=>{
 })
 
 
-app.get("/teamdashboard",(req,res)=>{
+app.get("/teamdashboard", async (req,res)=>{
+    try{
     if(req.session.user)
     {
-    const teamName = req.session.user.team_name
-    res.render("teamdashboard.ejs", { teamName });
+    const team = req.session.user
+    const tasks = await juryevals.find({teamid:req.session.user._id},{_id:0,tasksr1:1,tasksr2:1,tasksr3:1})
+    const round = await rounds.find().exec()
+    res.render("teamdashboard.ejs", { team,tasks,round });
     }
     else{
         res.redirect('/teamlogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/teamlogin')
+    }
+})
+
+app.get("/teamdetails", async (req,res)=>{
+    try{
+    if(req.session.user)
+    {
+    const team = req.session.user
+    res.render("teamdetails.ejs", { team });
+    }
+    else{
+        res.redirect('/teamlogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/teamlogin')
     }
 })
 

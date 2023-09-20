@@ -42,10 +42,11 @@
 				<div class="page-header">
 					<div class="row">
 						<div class="col-md-9">
-							<h3> SIH 2K23 INTERNAL HACKATHON <%= team['edition'] %> edition  Dashboard !</h3>
-							<h3 class="page-title"> Welcome Team <b> <%= team['team_name'] %></b>!</h3>
+							<h3> SIH 2K23 INTERNAL HACKATHON</h3>
+							<h3 class="page-title"> Team <b> <%= team['team_name'] %> Details</b>!</h3>
 						<ul class="breadcrumb">
-							<li class="breadcrumb-item"><a href='/teamdetails'><%= team['team_name'] %> Details</a></li>
+							<li class="breadcrumb-item "><a href='/teamdashboard'>Dashboard</a></li>
+                            <li class="breadcrumb-item active"><%= team['team_name'] %> Details</li>
 						</ul>
 						</div>
 						<div class="col-md-3">
@@ -69,100 +70,9 @@
 					</div>
 					</div>
 			
-				<!-- /Page Header -->
-				<!-- Overview Section -->
-					<!-- /Overview Section -->	
-					<!-- Teacher Dashboard -->
-					<div class="row">
-						<div class="col-12 col-lg-12 col-xl-8 d-flex">
-							 <div class="card flex-fill">
-								<div class="card-header">
-									<div class="row align-items-center">
-										<div class="col-6">
-											<h5 class="card-title">Tasks Assigned By Jury</h5>
-										</div>
-									</div>						
-							    </div>
-								<div class="card-body">
-									<!-- need to change them into lists -->
-									<%  if(tasks[0]['tasksr1']=='hii'){ %>
-									<h5><b>Not yet Assigned Tasks for Round1</b></h5>
-									
-									<%} else{ %>
-										<h6>Round 1 Tasks : <b><%= tasks[0]['tasksr1'] %></b></h6>
-									 <% }%>
-									 <%  if(tasks[0]['tasksr2']!='hii'){ %>
-										<h6>Round 2 Tasks :<b><%= tasks[0]['tasksr2'] %></b></h6>
-									<%}%>
-
-								</div>	
-						 </div>
-					  </div> 	
+				
 								  
-						<div class="col-12 col-lg-4 col-xl-4 d-flex">				
-								<!-- Feed Activity -->
-								<div class="card flex-fill">
-									<div class="card-header">
-										<h5 class="card-title">Round Wise Timings</h5>
-									</div>
-									<div class="card-body">
-										<div class="table-responsive">
-											<table  class="table table-hover">
-												<thead>
-													<tr>
-														<th>Round Number</th>
-														<th>Start Time</th>
-														<th>End Time</th>
-													</tr>
-												</thead>
-												<tbody>
-													<% round.forEach(function(rou) { %>
-														<tr>
-														  <td>Round - <%=rou['RoundNumber'] %></td>
-														  <% if (rou['start']) { %>
-														  <td><%=String(rou['start']).slice(0,24) %></td>
-														  <% } else { %>
-															<td>----</td>
-														  <% } %>
-														  <% if (rou['end']) { %>
-															<td><%=String(rou['end']).slice(0,24) %></td>
-															<% } else { %>
-															  <td>----</td>
-															<% } %>
-														</tr>
-													  <% }); %>
-												</tbody>
-											</table>
-										</div>
-									</div>					
-								</div>
-							</div>
-						</div>
-
-					<!-- <div class="col-12 col-lg-4 col-xl-4 d-flex">
-						<div class="card flex-fill">
-							<div class="card-header">
-								<div class="row align-items-center">
-									<div class="col-12">
-										<h5 class="card-title">Semester Progres</h5>
-									</div>
-								</div>						
-							</div>
-							<div class="dash-widget">
-								<div class="circle-bar circle-bar1">
-									<div class="circle-graph1" data-percent="50">
-										<b>50%</b>
-									</div>
-								</div>
-								<div class="dash-info">
-									<h6>Lesson Progressed</h6>
-									<h4>30 <span>/ 60</span></h4>
-								</div>
-							</div>
-						</div>
-					</div>
-					</div> -->
-				</div>
+						
 			</div>
 			<!-- /Teacher Dashboard -->
 		</div>
