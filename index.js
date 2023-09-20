@@ -27,6 +27,21 @@ mongoose.connect('mongodb+srv://saipraneethkambhampati800:PFTyvSKltwa4wBFB@clust
     console.log("failed to connect")
 })
 
+const startSchema = new mongoose.Schema({
+   set:{
+    type:Number,
+    required:true
+   },
+   starttime:{
+    type:Date,
+    required:true
+   },
+   endtime:{
+    type:Date,
+    required:true
+   }
+})
+
 const TeamSchema = new mongoose.Schema(
     {
         team_name:{
@@ -109,6 +124,8 @@ const PeerevaluationSchema = new mongoose.Schema(
             }
     }
 )
+
+
 const roundSchema = new mongoose.Schema(
     {
         RoundNumber:{
@@ -135,11 +152,43 @@ const jury = new mongoose.model("juries",JurySchema)
 const peerevals = new mongoose.model("peerevals",PeerevaluationSchema)
 const rounds = new mongoose.model("rounds", roundSchema)
 const juryevals = new mongoose.model("juryevals", juryEvalschema)
+const starts = new mongoose.model("starts",startSchema)
 
-
-app.get("/",(req,res)=>{
-res.render("index.ejs");
+app.get("/",async (req,res)=>{
+const starti = await starts.find({},{set:1}).exec()
+res.render("index.ejs",{starti});
 })
+
+// Route to store the timestamp in the database
+app.post("/startTimer", async (req, res) => {
+    try {
+        // Calculate the end timestamp (current time + 24 hours)
+        const currentTime = new Date();
+        
+        const endTime = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+        console.log(currentTime,' ',endTime)
+        // Store the end timestamp in the database (replace 'Team' with your model)
+        const start = await starts.updateOne({set:0},{set:1,starttime:currentTime,endtime:endTime}).exec();
+
+        // Send the stored timestamp back to the frontend
+        res.json({ timestamp: endTime });
+    } catch (error) {
+        console.error("Error storing timestamp:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+// Route to retrieve the stored timestamp from the database
+app.get("/getStoredTime", async (req, res) => {
+    try {
+
+        const start= await starts.find({},{}).exec();
+        res.json({ timestamp: start[0]['endtime'] });
+    } catch (error) {
+        console.error("Error retrieving stored timestamp:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 app.get("/teamlogin",(req,res)=>{
     if(req.session.user)
@@ -160,6 +209,7 @@ app.get("/jurylogin",(req,res)=>{
     res.render("jurylogin.ejs");
     }
 })
+
 
 app.get("/jurydashboard",async (req,res)=>{
     try{
