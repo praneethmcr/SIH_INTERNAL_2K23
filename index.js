@@ -4,10 +4,10 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
 const app = express();
-
+app.set("view-engine","ejs");
 app.use(express.static(__dirname + '/public'));
 
-app.set("view-engine","ejs");
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
@@ -38,6 +38,10 @@ const startSchema = new mongoose.Schema({
    },
    endtime:{
     type:Date,
+    required:true
+   },
+   rset:{
+    type:Number,
     required:true
    }
 })
@@ -129,7 +133,7 @@ const PeerevaluationSchema = new mongoose.Schema(
 const roundSchema = new mongoose.Schema(
     {
         RoundNumber:{
-            type:String,
+            type:Number,
             required:true
         },
         set:{
@@ -138,11 +142,11 @@ const roundSchema = new mongoose.Schema(
             required:true
             },
         start:{
-            type:String,
+            type:Date||String,
             required:true
             },
         end:{
-            type:String,
+            type:Date||String,
             required:true
             }
     }
@@ -153,6 +157,7 @@ const peerevals = new mongoose.model("peerevals",PeerevaluationSchema)
 const rounds = new mongoose.model("rounds", roundSchema)
 const juryevals = new mongoose.model("juryevals", juryEvalschema)
 const starts = new mongoose.model("starts",startSchema)
+
 
 app.get("/",async (req,res)=>{
 const starti = await starts.find({},{set:1}).exec()
@@ -501,20 +506,189 @@ app.post("/evaluate1",async (req,res)=>{
             res.redirect('/teamlogin');
         }
         })
-        
+    
+app.get("/adminlogin",(req,res)=>{
+    if(req.session.admin=='admin')
+    {
+    res.redirect('/admindashboard')
+    }
+    else{
+    res.render("adminlogin.ejs");
+    }
+})
+
+app.post("/adminlogin",(req,res)=>{
+
+   const  admin = req.body.admin_name
+    const password =req.body.admin_password
+    if(admin=='admin'){
+    req.session.admin = "admin"
+    res.redirect('/admindashboard')}
+    else{
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/admindashboard", async (req,res)=>{
+    try{
+    if(req.session.admin=='admin'){
+        const round = await rounds.find().exec()
+        const rset1 = await starts.find({},{rset:1,_id:0})
+        const rset =rset1[0]['rset']
+        res.render("admindashboard.ejs",{round,rset})
+    }
+    else{
+        res.render('/adminlogin')
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+app.get("/adminlogout", (req, res) => {
+    // Destroy the user's session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+        } else {
+            // Redirect to the login page or any other appropriate page
+            res.redirect('/adminlogin');
+        }
+    });
+   })
+
+app.get("/setround1", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(1)},{set:1,start:timestamp}).exec()
+            if(check){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/endround1", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(1)},{set:2,end:timestamp}).exec()
+            const scheck = await starts.updateOne({set:1},{rset:2}).exec() 
+            if(scheck){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/endround2", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(2)},{set:2,end:timestamp}).exec()
+            const scheck = await starts.updateOne({set:1},{rset:3}).exec() 
+            if(scheck){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/setround2", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(2)},{set:1,start:timestamp}).exec()
+            if(check){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+           
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/setround3", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(3)},{set:1,start:timestamp}).exec()
+            if(check){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+           
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/endround3", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const timestamp = new Date();
+            const check = await rounds.updateOne({RoundNumber:parseInt(3)},{set:2,end:timestamp}).exec()
+            const scheck = await starts.updateOne({set:1},{rset:4}).exec() 
+            if(scheck){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
 app.get("/Schedule",(req,res)=>{
     if(req.session.user)
     {
-        res.render("schedule.ejs", { sidebar:0 });
+        res.render('schedule.ejs', { sidebar:0 });
     }
     else if(req.session.edition){
-        res.render("schedule.ejs", { sidebar:1 });
+        res.render('schedule.ejs', { sidebar:1 });
     }
     else{
     res.redirect('/teamlogin');
     }
             
-   })        
+   })
 
 
 app.listen(3000, function () {

@@ -47,21 +47,20 @@
                                     <h6>Overall 2 Rounds Scoring:<b> <%= jdata3[0]['result'] %>/50</b></h6>
 									<div class="row">
 										<div class="col-md-6">
-						
-									<div class="card">
-										<div class="card-body">
-											<h6><b>ROUND 1 EVALUATION DETAILS</b></h6>
-											<h6>Round 1 Jury Feedback: <b><%= jdata3[0]['feedback1'] %></b></h6>
+											<div class="card">
+												<div class="card-body">
+													<h6><b>ROUND 1 EVALUATION DETAILS</b></h6>
+													<h6>Round 1 Jury Feedback: <b><%= jdata3[0]['feedback1'] %></b></h6>
 
-											<h6>Round 1 Jury Assigned Tasks</h6>
-											<ul>
-											<% jdata3[0]['tasksr1'].forEach(function(item) { %>
-												<li><%= item %></li>
-											<% }); %>
-										</ul>
-										</div>
-									</div>
-									<div class="card">
+													<h6>Round 1 Jury Assigned Tasks</h6>
+													<ul>
+													<% jdata3[0]['tasksr1'].forEach(function(item) { %>
+														<li><%= item %></li>
+													<% }); %>
+												</ul>
+												</div>
+											</div>
+									    <div class="card">
 											<div class="col-md-6">
 											<div class="card-body">
 												<h6><b>ROUND 2 EVALUATION DETAILS</b></h6>

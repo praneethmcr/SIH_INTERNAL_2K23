@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>Jury - Dashboard</title>
+        <title>Admin - Dashboard</title>
 		
 		<!-- Favicon -->
         <link rel="shortcut icon" href="/assets/img/favicon.png">
@@ -35,17 +35,19 @@
 	
 	<!-- Main Wrapper -->
 	<div class="main-wrapper">	
-        <%- include('jurymenu.ejs') -%>
+       
 		<!-- Page Wrapper -->
 		<div class="page-wrapper">
+            <%- include('adminmenu.ejs') -%>
 			<div class="content container-fluid">
 				<!-- Page Header -->
 				<div class="page-header">
 					<div class="row">
 						<div class="col-md-9">
 						     <h3> SIH 2K23 INTERNAL HACKATHON</h3>
-							<h3 class="page-title">Welcome to the  <%= edition %> Edition Evaluation Dashboard!</h3>
+							<h3 class="page-title">Welcome to the  Admin Dashboard !!</h3>
 						</div>
+
 						<div class="col-md-3">
 							<div class="card">
 								<div class="card-body">
@@ -66,101 +68,56 @@
 						</div>
 					</div>
 				</div>
-				<!-- /Page Header -->
-				<!-- Overview Section -->
-					<!-- /Overview Section -->	
-					<!-- Teacher Dashboard -->
-					<div class="row">
-						<div class="col-12 col-lg-12 col-xl-12 d-flex">
-							 <div class="card flex-fill">
-								<div class="card-header">
-									<div class="row align-items-center">
-										<div class="col-6">
-											<h5 class="card-title">JURY Tasks</h5>
-										</div>
-									</div>						
-							  </div>
-						           <div class="card-body">
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="card card-table">
-												<div class="card-body">
-													<div class="table-responsive">
-														<table  class="table table-hover">
-															<thead>
-																<tr>
-																	<th>Round Number</th>
-																	<th>Start</th>
-																	<th>End</th>
-																</tr>
-															</thead>
-															<tbody>
-																<% round.forEach(function(rou) { %>
-																	<tr>
-																	  <td>Round - <%=rou['RoundNumber'] %></td>
-																	  <% if (rou['start']) { %>
-																		<td><%=String(rou['start']).slice(0,24) %></td>
-																		<% } else { %>
-																		  <td>----</td>
-																		<% } %>
-																		<% if (rou['end']) { %>
-																		  <td><%=String(rou['end']).slice(0,24) %></td>
-																		  <% } else { %>
-																			<td>----</td>
-																		  <% } %>
-																	  <% if (rou['set']=='1') { %>
-																		<td><a href="/juryevaluationlist<%=rou['RoundNumber'] %>">Round Evaluation</a></td>
-																	   <% } else if (rou['set'] == '2') { %>
-																			<td><b>Round-<%=rou['RoundNumber'] %> ended</b></td>
-																	  <% } else { %>
-																		<td>Not Yet Started</td>
-																	  <% } %>
-																	</tr>
-																  <% }); %>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>							
-										</div>					
-									</div>			
-								   </div></div></div> 	
-								  
-
-
-					<!-- <div class="col-12 col-lg-4 col-xl-4 d-flex">
-						<div class="card flex-fill">
-							<div class="card-header">
-								<div class="row align-items-center">
-									<div class="col-12">
-										<h5 class="card-title">Semester Progres</h5>
-									</div>
-								</div>						
-							</div>
-							<div class="dash-widget">
-								<div class="circle-bar circle-bar1">
-									<div class="circle-graph1" data-percent="50">
-										<b>50%</b>
-									</div>
-								</div>
-								<div class="dash-info">
-									<h6>Lesson Progressed</h6>
-									<h4>30 <span>/ 60</span></h4>
-								</div>
-							</div>
-						</div>
-					</div>
-					</div> -->
-				</div>
-			</div>
-			<!-- /Teacher Dashboard -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card card-table">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table  class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Round Number</th>
+                                                    <th>Start Time</th>
+                                                    <th>End Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% round.forEach(function(rou) { %>
+                                                    <tr>
+                                                      <td>Round - <%=rou['RoundNumber'] %></td>
+                                                      <% if (rou['start']) { %>
+                                                      <td><%=String(rou['start']).slice(0,24) %></td>
+                                                      <% } else { %>
+                                                        <td>----</td>
+                                                      <% } %>
+                                                      <% if (rou['end']) { %>
+                                                        <td><%=String(rou['end']).slice(0,24) %></td>
+                                                        <% } else { %>
+                                                          <td>----</td>
+                                                        <% } %>
+                                                      <% if (rou['set']=='0' && rset==parseInt(rou['RoundNumber'])) { %>
+                                                        <td><a href="/setround<%=rou['RoundNumber']%>"><button type="button" class="btn btn-primary">Start Round-<%=rou['RoundNumber'] %></button></a></td>
+                                                        <% } else if (rou['set'] == '2') { %>
+                                                            <td><b>Round-<%=rou['RoundNumber'] %> ended</b></td>
+                                                        <% } else if (rou['set'] =='0') { %>
+                                                            <td>Round Not yet Started</td>
+                                                          <% } else { %>
+                                                            <td><a href="/endround<%=rou['RoundNumber']%>"><button type="button" class="btn btn-primary">End Round-<%=rou['RoundNumber'] %></button></a></td>
+                                                          <% } %>
+                                                    </tr>
+                                                  <% }); %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>							
+                        </div>					
+                    </div>			
+                   </div></div></div> 	
+                  
 		</div>
 		
-		<!-- Footer -->
-		<!-- <footer>
-			<p>Copyright © 2020 Dreamguys.</p>					
-		</footer> -->
-		<!-- /Footer -->
 
 	</div>
 	<!-- /Page Wrapper -->
