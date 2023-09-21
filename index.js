@@ -51,6 +51,18 @@ const startSchema = new mongoose.Schema({
    llogin:{
     type:Number,
     required:true
+   },
+   peerset:{
+    type:Number,
+    required:true
+   },
+   peerstart:{
+    type:mongoose.Schema.Types.Mixed,
+    required:true
+   },
+   peerend:{
+    type:mongoose.Schema.Types.Mixed,
+    required:true
    }
 })
 
@@ -184,8 +196,13 @@ const starts = new mongoose.model("starts",startSchema)
 
 
 app.get("/",async (req,res)=>{
+try{
 const starti = await starts.find({},{set:1}).exec()
 res.render("index.ejs",{starti});
+}
+catch(error){
+    console.log(error)
+}
 })
 
 // Route to store the timestamp in the database
@@ -220,7 +237,7 @@ app.get("/getStoredTime", async (req, res) => {
 });
 
 // Teams Route Handling Functions
-app.get("/teamlogin",async (req,res)=>{
+app.get("/teamlogin",(req,res)=>{
     if(req.session.user)
     {
     
@@ -309,7 +326,7 @@ app.post("/evaluate1",async (req,res)=>{
     
      const Newpeer = new peerevals ({user_id:req.session.user._id,peerid:req.body.peerid,result:String(res1),set:"1"})
      await Newpeer.save();
-     const peerresult = await teams.updateOne({_id:req.body.peerid},{$inc:{peerresult:res1}})
+     const peerresult = await teams.updateOne({_id:req.body.peerid},{$inc:{peerresult:res1}}).exec()
 
      res.redirect('/peerlist')
     }
@@ -320,6 +337,7 @@ app.post("/evaluate1",async (req,res)=>{
     })
 
     app.get("/peerlist",async (req,res)=>{ 
+        try{
         if(req.session.user)
         {
             const currentUserTeamName = req.session.user.team_name
@@ -337,13 +355,18 @@ app.post("/evaluate1",async (req,res)=>{
         }
         else{
             res.redirect('/teamlogin');
+        }}
+        catch(error)
+        {
+            console.log(error)
+            res.redirect('/teamlogin');
         }
         })
 
 app.get("/logout", async (req, res) => {
     // Destroy the user's session
     try{
-    const acess = await teams.updateOne({'_id':req.session.user._id},{logcount:0})
+    const acess = await teams.updateOne({'_id':req.session.user._id},{logcount:0}).exec()
     if(acess){
     req.session.destroy((err) => {
         if (err) {
@@ -615,11 +638,14 @@ app.get("/admindashboard", async (req,res)=>{
         const admin = admin1[0]
         const round = await rounds.find().exec()
         const rset1 = await starts.find({},{rset:1,_id:0})
+
+        const peer = await starts.find({},{peerstart:1,peerend:1,peerset:1,_id:0})
+        
         const rset =rset1[0]['rset']
-        res.render("admindashboard.ejs",{round,rset,admin})
+        res.render("admindashboard.ejs",{round,rset,admin,peer})
     }
     else{
-        res.render('/adminlogin')
+        res.redirect('/adminlogin')
     }}
     catch(error){
         console.log(error);
@@ -634,7 +660,7 @@ app.get("/adminsoftwarelist", async (req,res)=>{
         res.render("adminsoftwarelist.ejs",{slist})
     }
     else{
-        res.render('/adminlogin',{slist,jlist})
+        res.redirect('/adminlogin')
     }}
     catch(error){
         console.log(error);
@@ -651,7 +677,7 @@ app.get("/adminhardwarelist", async (req,res)=>{
         res.render("adminhardwarelist.ejs",{hlist})
     }
     else{
-        res.render('/adminlogin',{hlist,jlist})
+        res.redirect('/adminlogin')
     }}
     catch(error){
         console.log(error);
@@ -769,7 +795,7 @@ app.get("/endround3", async (req,res)=>{
             const id = id1[0]['_id']
             const timestamp = new Date();
             const check = await rounds.updateOne({RoundNumber:parseInt(3)},{set:2,end:timestamp}).exec()
-            const scheck = await starts.updateOne({id:_id},{rset:4}).exec() 
+            const scheck = await starts.updateOne({_id:id},{rset:4}).exec() 
             if(scheck){
                 res.redirect('/admindashboard')
             }
@@ -801,7 +827,49 @@ app.post("/setteamlogincount", async (req,res)=>{
     }
 })
 
+app.get("/adminendpeer", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const timestamp = new Date();
+            const scheck = await starts.updateOne({_id:id},{peerend:timestamp,peerset:2}).exec() 
 
+            if(scheck){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/adminstartpeer", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const timestamp = new Date();
+            const scheck = await starts.updateOne({_id:id},{peerstart:timestamp,peerset:1}).exec() 
+
+            if(scheck){
+                res.redirect('/admindashboard')
+            }
+            else{
+                res.redirect('/adminlogin')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
 
 app.get("/adminsetteamlogin", async (req,res)=>{
     try{

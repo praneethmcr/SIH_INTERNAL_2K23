@@ -87,17 +87,17 @@
                                                 <% round.forEach(function(rou) { %>
                                                     <tr>
                                                       <td>Round - <%=rou['RoundNumber'] %></td>
-                                                      <% if (rou['start']=='hii') { %>
+                                                      <% if (rou['start']==='hii') { %>
                                                         <td>----</td>
                                                       <% } else { %>
                                                         <td><%=String(rou['start']).slice(0,24) %></td>
                                                       <% } %>
-                                                      <% if (rou['end']=='hii') { %>
+                                                      <% if (rou['end']==='hii') { %>
                                                         <td>----</td>
                                                         <% } else { %>
                                                             <td><%=String(rou['end']).slice(0,24) %></td>
                                                         <% } %>
-                                                      <% if (rou['set']=='0' && rset==parseInt(rou['RoundNumber'])) { %>
+                                                      <% if (rou['set']=='0' && rset===parseInt(rou['RoundNumber'])) { %>
                                                         <td><a href="/setround<%=rou['RoundNumber']%>"><button type="button" class="btn btn-primary">Start Round-<%=rou['RoundNumber'] %></button></a></td>
                                                         <% } else if (rou['set'] == '2') { %>
                                                             <td><b>Round-<%=rou['RoundNumber'] %> ended</b></td>
@@ -151,7 +151,48 @@
                                     </div>
                             </div>
                        </div>			
-                    </div>			
+                    </div>	
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <div class="card card-table">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table  class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Peer Evaluation</th>
+                                                        <th>Start Time</th>
+                                                        <th>End Time</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <td>Peer Evaluation</td>
+                                                        <% if(peer[0]['peerstart']==="hii"){ %>
+                                                            <td>----</td>
+                                                        <% } else{%>
+                                                            <td><%=String(peer[0]['peerstart']).slice(0,24)%></td>
+                                                            
+                                                        <% }%>
+                                                        <% if(peer[0]['peerend']==="hii"){ %>
+                                                            <td>----</td>
+                                                        <% } else{%>
+                                                            <td><%=String(peer[0]['peerend']).slice(0,24)%></td>
+                                                        <% }%>
+                                                        <% if(peer[0]['peerset']===1){ %>
+                                                        <td><a href="/adminendpeer"><button type="submit" class="btn btn-primary">End Peer Evaluation</button></a></td>
+                                                        <% }else if(peer[0]['peerset']===2) { %>
+                                                            <td>peer evaluation ends</td>
+                                                        <% } else{ %>
+                                                            <td><a href="/adminstartpeer"><button type="submit" class="btn btn-primary">Start Peer Evaluation</button></a></td>
+                                                        <% } %>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>							
+                            </div>		
                     <div class="row">
                         <div class="col-md-3">
                             <div class="card">
