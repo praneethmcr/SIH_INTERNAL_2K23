@@ -68,9 +68,10 @@
 						</div>
 					</div>
 				</div>
+
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-9">
                             <div class="card card-table">
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -86,15 +87,15 @@
                                                 <% round.forEach(function(rou) { %>
                                                     <tr>
                                                       <td>Round - <%=rou['RoundNumber'] %></td>
-                                                      <% if (rou['start']) { %>
-                                                      <td><%=String(rou['start']).slice(0,24) %></td>
-                                                      <% } else { %>
+                                                      <% if (rou['start']=='hii') { %>
                                                         <td>----</td>
+                                                      <% } else { %>
+                                                        <td><%=String(rou['start']).slice(0,24) %></td>
                                                       <% } %>
-                                                      <% if (rou['end']) { %>
-                                                        <td><%=String(rou['end']).slice(0,24) %></td>
+                                                      <% if (rou['end']=='hii') { %>
+                                                        <td>----</td>
                                                         <% } else { %>
-                                                          <td>----</td>
+                                                            <td><%=String(rou['end']).slice(0,24) %></td>
                                                         <% } %>
                                                       <% if (rou['set']=='0' && rset==parseInt(rou['RoundNumber'])) { %>
                                                         <td><a href="/setround<%=rou['RoundNumber']%>"><button type="button" class="btn btn-primary">Start Round-<%=rou['RoundNumber'] %></button></a></td>
@@ -112,9 +113,66 @@
                                     </div>
                                 </div>
                             </div>							
-                        </div>					
+                        </div>		
+                        <div class="col-sm-3">
+                            <div class="card">
+                                    <div class="card-header">
+                                        Toggle Buttons
+                                    </div>
+                                    <div class="card-body">
+                                        
+                                        <div class="col-md-12">
+                                            <a href="/adminsethackathon"><button type="button" class="btn btn-primary">Set Start Hackathon</button></a>
+                                        </div>
+                                        <br>
+                                        <div class="col-md-12">
+                                            <a href="/adminsetrounds"><button type="button" class="btn btn-primary">Set Rounds</button></a>
+                                        </div>
+                                        <br>
+                                        <% if(admin['llogin']){ %>
+                                            <div class="col-md-12">
+                                                <a href="/admindenyteamlogin"><button type="button" class="btn btn-primary">Deny Teams Login</button></a>
+                                            </div>
+                                        <%} else{%>
+                                        <div class="col-md-12">
+                                            <a href="/adminsetteamlogin"><button type="button" class="btn btn-primary">Teams Login Access</button></a>
+                                        </div>
+                                        <%}%>
+                                        <br>
+                                        <% if(admin['rlogin']){ %>
+                                        <div class="col-md-12">
+                                            <a href="/admindenyjurylogin"><button type="button" class="btn btn-primary">Deny Juries Login</button></a>
+                                        </div>
+                                        <%} else{%>
+                                        <div class="col-md-12">
+                                            <a href="/adminsetjurylogin"><button type="button" class="btn btn-primary">Juries Login Access</button></a>
+                                        </div>
+                                        <%}%>
+                                    </div>
+                            </div>
+                       </div>			
                     </div>			
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form action="/setteamlogincount" method="post">
+                                        <div class="form-group">
+                                            <label>Give Team login Access</label>
+                                            <div class="form-group">
+                                            <input class="form-control" name="team_name" id="team_name" type="text" placeholder="teamname">
+                                            </div>
+                                            <div class="form-group text-end">
+                                            <button type="submit" class="btn btn-primary" name="submit">Give Access</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                    </div></div></div> 	
+ 
                   
 		</div>
 		
@@ -123,48 +181,80 @@
 	<!-- /Page Wrapper -->
 
         </div>
-		<script>
-                let secondsRemaining = 86400;
-                function updateTimer() {
-                    if (secondsRemaining <= 0) {
-                        secondsRemaining = 86400; // Reset to 24 hours when it reaches zero
-                    }
-            
-                    const hours = Math.floor(secondsRemaining / 3600) || '24';
-                    const minutes = Math.floor((secondsRemaining % 3600) / 60) || '00';
-                    const seconds = secondsRemaining % 60 || '00';
-                    
-                    const hoursDisplay = hours.toString().padStart(2, "0");
-                    const minutesDisplay = minutes.toString().padStart(2, "0");
-                    const secondsDisplay = seconds.toString().padStart(2, "0");
-            
-                    document.getElementById("timer").textContent = `${hoursDisplay}:${minutesDisplay}:${secondsDisplay}`;
-                    secondsRemaining--;
-				}
+        <script>
+            let secondsRemaining = 86400;
+            function updateTimer() {
+        
+                const hours = Math.floor(secondsRemaining / 3600) || '24';
+                const minutes = Math.floor((secondsRemaining % 3600) / 60) || '00';
+                const seconds = secondsRemaining % 60 || '00';
+                
+                const hoursDisplay = hours.toString().padStart(2, "0");
+                const minutesDisplay = minutes.toString().padStart(2, "0");
+                const secondsDisplay = seconds.toString().padStart(2, "0");
+        
+                document.getElementById("timer").textContent = `${hoursDisplay}:${minutesDisplay}:${secondsDisplay}`;
+                secondsRemaining--;
+            }
 
-
-                // Function to retrieve the stored timestamp and initialize the timer
-                function getStoredTimestamp() {
-                    fetch("/getStoredTime")
-                    .then(response => response.json())
-                    .then(data => {
-                        const storedTimestamp = new Date(data.timestamp);
-                        const currentTime = new Date();
-                        const timeDifference = storedTimestamp - currentTime;
-                        // Set the initial secondsRemaining based on the stored timestamp
-                        secondsRemaining = Math.floor(timeDifference / 1000);
-                        // Update the timer display
-                        setInterval(updateTimer, 1000); 
-                    })
-                    .catch(error => {
-                        console.error("Error fetching stored timestamp:", error);
-                    });
-                }
-
-                window.addEventListener("load", function(event){
+                // Function to start the timer
+                function startTimer() {
+                document.getElementById("startButton").style.display = "none"; // Hide the button
+                document.getElementById("music").play(); // Play the music
+                // Send an AJAX request to the backend to store the timestamp
+                fetch("/startTimer", {
+                    method: "POST",
+                })
+                .then(response => {
                     getStoredTimestamp();
-			});
-		</script>
+                })
+                .catch(error => {
+                    console.error("Error storing timestamp:", error);
+                });
+            }
+            const startButton = document.getElementById("startButton");
+            if (startButton) {
+            startButton.addEventListener("click", startTimer);
+            }
+
+
+            // Function to retrieve the stored timestamp and initialize the timer
+            function getStoredTimestamp() {
+                fetch("/getStoredTime")
+                .then(response => response.json())
+                .then(data => {
+                    const storedTimestamp = new Date(data.timestamp);
+                    const currentTime = new Date();
+                    const timeDifference = storedTimestamp - currentTime;
+                    console.log(timeDifference);
+                    if(timeDifference>0){
+                    // Set the initial secondsRemaining based on the stored timestamp
+                    secondsRemaining = Math.floor(timeDifference / 1000);
+                    // Update the timer display
+                    setInterval(updateTimer, 1000); 
+                    }
+                    else if(timeDifference==0)
+                    {
+                        document.getElementById("timer").textContent = "Stop Coding" // Reset to 24 hours when it reaches zero
+                    document.getElementById("music").play();
+                    }
+                    else{
+                    document.getElementById("timer").textContent = "24:00:00" // Reset to 24 hours when it reaches zero
+                    document.getElementById("music").play();
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching stored timestamp:", error);
+                });
+            }
+
+            window.addEventListener("load", function(event){
+                getStoredTimestamp();
+        });
+        
+
+        </script>
+    
 		<!-- /Main Wrapper -->	
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

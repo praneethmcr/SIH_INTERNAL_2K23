@@ -33,14 +33,22 @@ const startSchema = new mongoose.Schema({
     required:true
    },
    starttime:{
-    type:Date,
+    type:mongoose.Schema.Types.Mixed,
     required:true
    },
    endtime:{
-    type:Date,
+    type:mongoose.Schema.Types.Mixed,
     required:true
    },
    rset:{
+    type:Number,
+    required:true
+   },
+   rlogin:{
+    type:Number,
+    required:true
+   },
+   llogin:{
     type:Number,
     required:true
    }
@@ -55,6 +63,22 @@ const TeamSchema = new mongoose.Schema(
         password:{
             type:String,
             required:true
+      },
+      edition:{
+        type:String,
+        required:true
+      },
+      peerresult:{
+        type:Number,
+        required:true
+      },
+      juryresult:{
+        type:Number,
+        required:true
+      },
+      logcount:{
+        type:Number,
+        required:true
       }
     }
 )
@@ -142,11 +166,11 @@ const roundSchema = new mongoose.Schema(
             required:true
             },
         start:{
-            type:Date||String,
+            type:mongoose.Schema.Types.Mixed,
             required:true
             },
         end:{
-            type:Date||String,
+            type:mongoose.Schema.Types.Mixed,
             required:true
             }
     }
@@ -196,9 +220,10 @@ app.get("/getStoredTime", async (req, res) => {
 });
 
 // Teams Route Handling Functions
-app.get("/teamlogin",(req,res)=>{
+app.get("/teamlogin",async (req,res)=>{
     if(req.session.user)
     {
+    
     res.redirect('/teamdashboard')
     }
     else{
@@ -214,7 +239,12 @@ app.get("/teamdashboard", async (req,res)=>{
     const team = req.session.user
     const tasks = await juryevals.find({teamid:req.session.user._id},{_id:0,tasksr1:1,tasksr2:1,tasksr3:1})
     const round = await rounds.find().exec()
-    res.render("teamdashboard.ejs", { team,tasks,round });
+    const id1 = await starts.find().exec()
+    const id = id1[0]['_id']
+    const st = await starts.find({_id:id},{rset:1})
+    const sta = st[0]['rset']
+
+    res.render("teamdashboard.ejs", { team,tasks,round,sta });
     }
     else{
         res.redirect('/teamlogin');
@@ -243,16 +273,20 @@ app.get("/teamdetails", async (req,res)=>{
 
 app.post("/teamlogin",async (req,res)=>{
 try{
-const check = await teams.findOne({team_name:req.body.team_name,password:req.body.team_password})
-if (check) {
+
+const check = await teams.findOne({team_name:req.body.team_name,password:req.body.team_password,logcount:0}).exec()
+
+const access = await starts.findOne().exec()
+if (check && access['llogin']==1) {
     req.session.user = check;
+    const ulog =  await teams.updateOne({team_name:req.body.team_name,password:req.body.team_password},{logcount:1}).exec()
     res.redirect('/teamdashboard');
 } else {
-    console.log("Team not found");
     res.redirect("/teamlogin");
 }
 }
-catch{
+catch(error){
+    console.log(error)
     res.redirect("/teamlogin");
 }
 })
@@ -272,11 +306,15 @@ app.get("/evaluate",(req,res)=>{
 app.post("/evaluate1",async (req,res)=>{
     const res1 = parseInt(req.body.q1)+parseInt(req.body.q2)+parseInt(req.body.q3)+parseInt(req.body.q4)+parseInt(req.body.q5)
     try {
+    
      const Newpeer = new peerevals ({user_id:req.session.user._id,peerid:req.body.peerid,result:String(res1),set:"1"})
      await Newpeer.save();
+     const peerresult = await teams.updateOne({_id:req.body.peerid},{$inc:{peerresult:res1}})
+
      res.redirect('/peerlist')
     }
     catch(error){
+        console.log(error);
         res.redirect("/teamdashboard");
     }
     })
@@ -302,8 +340,11 @@ app.post("/evaluate1",async (req,res)=>{
         }
         })
 
-app.get("/logout", (req, res) => {
+app.get("/logout", async (req, res) => {
     // Destroy the user's session
+    try{
+    const acess = await teams.updateOne({'_id':req.session.user._id},{logcount:0})
+    if(acess){
     req.session.destroy((err) => {
         if (err) {
             console.error("Error destroying session:", err);
@@ -311,7 +352,11 @@ app.get("/logout", (req, res) => {
             // Redirect to the login page or any other appropriate page
             res.redirect("/teamlogin");
         }
-    });
+    });}}
+    catch(error){
+        console.log(error);
+        res.redirect("/teamlogin");
+    }
 });
 // End of Teams Route Handling Functions
 
@@ -389,6 +434,7 @@ app.post("/juryevaluation1",async (req,res)=>{
         const tasks = req.body.task
         const jcheck = new juryevals({teamid:req.body.teamid,result:jres1,tasksr1:tasks,tasksr2:['hii'],tasksr3:['hii'],feedback1:" ",feedback2:" "})
         await jcheck.save()
+        const juryresult = await teams.updateOne({_id:req.body.teamid},{$inc:{juryresult:jres1}}).exec()
         res.redirect('/juryevaluationlist1')
     }
     catch(error){
@@ -444,6 +490,7 @@ app.post("/juryevaluation2",async (req,res)=>{
         const teamid = req.body.teamid
         const feedback = req.body.feedback
         const jcheck2 = await juryevals.updateOne({teamid:teamid},{tasksr2:tasks2,feedback1:feedback,$inc:{result:jres2},__v:1}).exec()
+        const juryresult = await teams.updateOne({_id:req.body.teamid},{$inc:{juryresult:jres2}}).exec()
         res.redirect('/juryevaluationlist2')
     }
     catch(error){
@@ -499,6 +546,7 @@ app.post("/juryevaluation3",async (req,res)=>{
         const feedback2 = req.body.feedback
         const teamid = req.body.teamid
         const jcheck3 = await juryevals.updateOne({teamid:teamid},{tasksr3:tasks3,__v:2,feedback2:feedback2,$inc:{result:jres2}}).exec()
+        const juryresult = await teams.updateOne({_id:req.body.teamid},{$inc:{juryresult:jres2}}).exec()
         res.redirect('/juryevaluationlist3')
     }
     catch(error){
@@ -508,12 +556,12 @@ app.post("/juryevaluation3",async (req,res)=>{
 })
 app.post("/jurylogin",async (req,res)=>{
     try{
-    const check1 = await jury.findOne({edition:req.body.jury_name,password:req.body.jury_password})
-    if (check1) {
+    const check1 = await jury.findOne({edition:req.body.jury_name,password:req.body.jury_password}).exec()
+    const access = await starts.findOne({},{rlogin:1}).exec()
+    if (check1 && access['rlogin']=='1') {
         req.session.edition = check1;
         res.redirect('/jurydashboard');
     } else {
-        console.log("jury not found");
         res.redirect("/jurylogin");
     }
     }
@@ -536,9 +584,11 @@ app.get("/jurylogout", (req, res) => {
 // Jury end of  Route Handling Functions
     
 // Admin Route Handling Functions
-app.get("/adminlogin",(req,res)=>{
+app.get("/adminlogin", (req,res)=>{
+
     if(req.session.admin=='admin')
     {
+
     res.redirect('/admindashboard')
     }
     else{
@@ -550,7 +600,7 @@ app.post("/adminlogin",(req,res)=>{
 
    const  admin = req.body.admin_name
     const password =req.body.admin_password
-    if(admin=='admin'){
+    if(admin=='admin' && password=='sih2k23'){
     req.session.admin = "admin"
     res.redirect('/admindashboard')}
     else{
@@ -561,10 +611,12 @@ app.post("/adminlogin",(req,res)=>{
 app.get("/admindashboard", async (req,res)=>{
     try{
     if(req.session.admin=='admin'){
+        const admin1 = await starts.find({})
+        const admin = admin1[0]
         const round = await rounds.find().exec()
         const rset1 = await starts.find({},{rset:1,_id:0})
         const rset =rset1[0]['rset']
-        res.render("admindashboard.ejs",{round,rset})
+        res.render("admindashboard.ejs",{round,rset,admin})
     }
     else{
         res.render('/adminlogin')
@@ -574,17 +626,38 @@ app.get("/admindashboard", async (req,res)=>{
         res.redirect('/adminlogin')
     }
 })
-app.get("/adminlogout", (req, res) => {
-    // Destroy the user's session
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Error destroying session:", err);
-        } else {
-            // Redirect to the login page or any other appropriate page
-            res.redirect('/adminlogin');
-        }
-    });
-   })
+
+app.get("/adminsoftwarelist", async (req,res)=>{
+    try{
+    if(req.session.admin=='admin'){
+        const slist = await teams.find({ edition: 'software' }, { team_name: 1, _id: 1,juryresult:1,peerresult:1 }).exec();
+        res.render("adminsoftwarelist.ejs",{slist})
+    }
+    else{
+        res.render('/adminlogin',{slist,jlist})
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/adminhardwarelist", async (req,res)=>{
+    try{
+    if(req.session.admin=='admin'){
+        const hlist = await teams.find({ edition: 'hardware' }, { team_name: 1, _id: 1,juryresult:1,peerresult:1 }).exec();
+        
+        
+        res.render("adminhardwarelist.ejs",{hlist})
+    }
+    else{
+        res.render('/adminlogin',{hlist,jlist})
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
 
 app.get("/setround1", async (req,res)=>{
     try{
@@ -608,9 +681,11 @@ app.get("/setround1", async (req,res)=>{
 app.get("/endround1", async (req,res)=>{
     try{
         if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
             const timestamp = new Date();
             const check = await rounds.updateOne({RoundNumber:parseInt(1)},{set:2,end:timestamp}).exec()
-            const scheck = await starts.updateOne({set:1},{rset:2}).exec() 
+            const scheck = await starts.updateOne({_id:id},{rset:2}).exec() 
             if(scheck){
                 res.redirect('/admindashboard')
             }
@@ -628,9 +703,11 @@ app.get("/endround1", async (req,res)=>{
 app.get("/endround2", async (req,res)=>{
     try{
         if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
             const timestamp = new Date();
             const check = await rounds.updateOne({RoundNumber:parseInt(2)},{set:2,end:timestamp}).exec()
-            const scheck = await starts.updateOne({set:1},{rset:3}).exec() 
+            const scheck = await starts.updateOne({_id:id},{rset:3}).exec() 
             if(scheck){
                 res.redirect('/admindashboard')
             }
@@ -688,9 +765,11 @@ app.get("/setround3", async (req,res)=>{
 app.get("/endround3", async (req,res)=>{
     try{
         if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
             const timestamp = new Date();
             const check = await rounds.updateOne({RoundNumber:parseInt(3)},{set:2,end:timestamp}).exec()
-            const scheck = await starts.updateOne({set:1},{rset:4}).exec() 
+            const scheck = await starts.updateOne({id:_id},{rset:4}).exec() 
             if(scheck){
                 res.redirect('/admindashboard')
             }
@@ -704,6 +783,158 @@ app.get("/endround3", async (req,res)=>{
         res.redirect('/adminlogin')
     }
 })
+
+app.post("/setteamlogincount", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = req.body.team_name
+            const id = await teams.updateOne({team_name:id1},{logcount:0}).exec()
+            if(id)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+
+
+app.get("/adminsetteamlogin", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const acessteam = await starts.updateOne({_id:id},{llogin:1}).exec()
+            console.log(acessteam)
+            if(acessteam)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/adminsetjurylogin", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const acessteam = await starts.updateOne({_id:id},{rlogin:1}).exec()
+            console.log(acessteam)
+            if(acessteam)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+
+
+app.get("/admindenyteamlogin", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const acessteam = await starts.updateOne({_id:id},{llogin:0}).exec()
+            console.log(acessteam)
+            if(acessteam)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/admindenyjurylogin", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const acessteam = await starts.updateOne({_id:id},{rlogin:0}).exec()
+            console.log(acessteam)
+            if(acessteam)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/adminsetrounds", async (req,res)=>{
+    try{
+        if(req.session.admin=="admin"){
+           
+            
+            const round1 = await rounds.updateOne({RoundNumber:1},{set:0,start:"hii",end:"hii"}).exec();
+            const round2 = await rounds.updateOne({RoundNumber:2},{set:0,start:"hii",end:"hii"}).exec();
+            const round3 = await rounds.updateOne({RoundNumber:3},{set:0,start:"hii",end:"hii"}).exec();
+            const id1 = await starts.find()
+            const id = id1[0]['_id']
+            const scheck1 = await starts.updateOne({_id:id},{rset:1}).exec() 
+            if(round3 && round2 && round1&&scheck1)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+app.get("/adminsethackathon", async (req,res)=>{
+    try{
+        if(req.session.admin==="admin"){
+            const id1 = await starts.find().exec()
+            const id = id1[0]['_id']
+            const acessteam = await starts.updateOne({_id:id},{set:0,rlogin:0,llogin:0,starttime:'hii',rset:1,endtime:'hii'}).exec()
+            if(acessteam)
+            {
+            res.redirect('/admindashboard')
+            }
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.redirect('/adminlogin')
+    }
+})
+
+
+
+app.get("/adminlogout", (req, res) => {
+    // Destroy the user's session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+        } else {
+            // Redirect to the login page or any other appropriate page
+            res.redirect('/adminlogin');
+        }
+    });
+   })
 
 
 // end of the Admin Route Handling Function

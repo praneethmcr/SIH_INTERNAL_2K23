@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>Team Lists</title>
+        <title>Hardware Team Lists</title>
 		
 		<!-- Favicon -->
         <link rel="shortcut icon" href="assets/img/favicon.png">
@@ -28,16 +28,17 @@
 		<div class="main-wrapper">
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
-				<%- include('teammenu.ejs') -%>
+				<%- include('adminmenu.ejs') -%>
                 <div class="content container-fluid">
 				
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Teams List</h3>
+								<h3 class="page-title">Software Teams List</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item active">Teams List</li>
+                                    <li class="breadcrumb-item"><a href='/admindashboard'>Admin Dashboard</a></li>
+									<li class="breadcrumb-item active">Hardware Teams List</li>
 								</ul>
 							</div>
 						</div>
@@ -54,21 +55,21 @@
 											<thead>
 												<tr>
 													<th>Team NAME</th>
-                                                    <th>Give Rating</th>
+													<th>PeerEvaluation Score</th>
+                                                    <th>Jury Score</th>
+													<th>Score(0.15*peerscore+0.35*juryscore)</th>
 												</tr>
 											</thead>
 											<tbody>
                                                 <!-- loop the list here -->
-												<% filteredTeamsList.forEach(function(item) { %>
+                                                <% hlist.forEach(function(item) { %>
 													<tr>
 													  <td><%= item['team_name'] %></td>
-													  <% if (alreadyEvaluatedList.includes(String(item._id))) { %>
-														<td><a href="#">Already Given</a></td>
-													  <% } else { %>
-														<td><a href="/evaluate?_id=<%=item['_id'] %>">Give rating</a></td>
-													  <% } %>
+													  <td><%= item['peerresult'] %></td>
+													  <td><%= item['juryresult'] %></td>
+													  <td><%= 0.15*(item['peerresult'])+0.35*(item['juryresult']) %></td>
 													</tr>
-												  <% }); %>												  
+												  <% }); %>		  
 											</tbody>
 										</table>
 									</div>
