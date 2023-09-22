@@ -336,12 +336,12 @@ app.get("/teamdetails", async (req,res)=>{
 app.post("/teamlogin",async (req,res)=>{
 try{
 
-const check = await teams.findOne({team_name:req.body.team_name,password:req.body.team_password,logcount:0}).exec()
+const check = await teams.findOne({team_id:req.body.team_name,password:req.body.team_password,logcount:0}).exec()
 
 const access = await starts.findOne().exec()
 if (check && access['llogin']==1) {
     req.session.user = check;
-    const ulog =  await teams.updateOne({team_name:req.body.team_name,password:req.body.team_password},{logcount:1}).exec()
+    const ulog =  await teams.updateOne({team_id:req.body.team_name,password:req.body.team_password},{logcount:1}).exec()
     res.redirect('/teamdashboard');
 } else {
     res.redirect("/teamlogin");
