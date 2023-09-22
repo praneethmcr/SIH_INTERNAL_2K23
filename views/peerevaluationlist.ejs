@@ -64,7 +64,11 @@
 													  <td><%= item['team_name'] %></td>
 													  <% if (alreadyEvaluatedList.includes(String(item._id))) { %>
 														<td><a href="#">Already Given</a></td>
-													  <% } else { %>
+													  <% } else if(peerset[0]['peerset']==0){ %>
+													   <td>Not Yet Started</td>
+
+													 
+													  <%} else { %>
 														<td><a href="/evaluate?_id=<%=item['_id'] %>">Give rating</a></td>
 													  <% } %>
 													</tr>

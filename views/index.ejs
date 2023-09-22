@@ -85,7 +85,7 @@
                             <button class="btn btn-primary" id="startButton">Start</button>
                         <% } %>
                     </div> 
-                    <audio id="music" src="assets/start.mp3" preload="auto"></audio>
+                    <audio id="music" src="assets/start1.mp3" preload="auto"></audio>
                 </div>
     
                 
@@ -99,9 +99,18 @@
 <div class="container-fluid">
     <br>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-1">
+                    
+                </div>
+                <div class="col-md-2">
                         <a class="logo-link smooth-menu header-logo" href="#home">
                         <img src="assets/img/srkrlogo.png" class="logo logo-display" alt="Logo">
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    
+                    <a class="logo-link smooth-menu header-logo" href="#home">
+                        <img src="assets/img/gdsclogo.jpg" class="logo logo-display" alt="Logo">
                     </a>
                 </div>
                 <div class="col-md-2">
@@ -110,17 +119,21 @@
                             <img src="assets/img/logo.png" class="logo logo-display" alt="Logo">
                         </a>
                     </div>
+
+
                     <div class="col-md-2">
-                            <a class="logo-link smooth-menu header-logo" href="#home">
-                                <img src="assets/img/idealablogo.png" class="logo logo-display" alt="Logo">
-                            </a>
-                        </div>
-                <div class="col-md-2">
                     
                         <a class="logo-link smooth-menu header-logo" href="#home">
-                            <img src="assets/img/gdsclogo.png" class="logo logo-display" alt="Logo">
+                            <img src="assets/img/tc_logo_big.png" class="logo logo-display" alt="Logo">
                         </a>
                     </div>
+                    <div class="col-md-2">
+                        <a class="logo-link smooth-menu header-logo" href="#home">
+                            <img src="assets/img/srkridealablogo.png" class="logo logo-display" width = "100" alt="Logo">
+                        </a>
+                    </div>
+                    
+
             
             </div></div></div></footer>
             <script>
@@ -178,11 +191,11 @@
                         else if(timeDifference==0)
                         {
                             document.getElementById("timer").textContent = "Stop Coding" // Reset to 24 hours when it reaches zero
-                        document.getElementById("music").play();
+                            
                         }
                         else{
                         document.getElementById("timer").textContent = "24:00:00" // Reset to 24 hours when it reaches zero
-                        document.getElementById("music").play();
+                        
                         }
                     })
                     .catch(error => {

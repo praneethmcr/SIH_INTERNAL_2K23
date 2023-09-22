@@ -68,32 +68,75 @@ const startSchema = new mongoose.Schema({
 
 const TeamSchema = new mongoose.Schema(
     {
-        team_name:{
-        type:String,
-        required:true
-        },
-        password:{
-            type:String,
-            required:true
-      },
-      edition:{
-        type:String,
-        required:true
-      },
-      peerresult:{
-        type:Number,
-        required:true
-      },
-      juryresult:{
-        type:Number,
-        required:true
-      },
-      logcount:{
-        type:Number,
-        required:true
-      }
-    }
-)
+            team_id: {
+              type: String,
+              required: true
+            },
+            password: {
+              type: String,
+              required: true
+            },
+            team_lead: {
+              type: String,
+              required: true
+            },
+            team_name: {
+              type: String,
+              required: true
+            },
+            team_mail: {
+              type: String,
+              required: true
+            },
+            team_phone: {
+              type: String,
+              required: true
+            },
+            edition: {
+              type: String,
+              required: true
+            },
+            ps_id: {
+              type: String,
+              required: true
+            },
+            ps_title: {
+              type: String,
+              required: true
+            },
+            ps_description: {
+              type: String,
+              required: true
+            },
+            category: {
+              type: String,
+              required: true
+            },
+            ppt_drive: {
+              type: String,
+              required: true
+            },
+            reportid: {
+              type: Number,
+              required: true
+            },
+            report_timestamp: {
+              type: String,
+              required: true
+            },
+            peerresult: {
+              type: Number,
+              required: true
+            },
+            juryresult: {
+              type: Number,
+              required: true
+            },
+            logcount: {
+              type: Number,
+              required: true
+            }
+        })
 const JurySchema = new mongoose.Schema(
     {
         edition:{
@@ -253,6 +296,7 @@ app.get("/teamdashboard", async (req,res)=>{
     try{
     if(req.session.user)
     {
+
     const team = req.session.user
     const tasks = await juryevals.find({teamid:req.session.user._id},{_id:0,tasksr1:1,tasksr2:1,tasksr3:1})
     const round = await rounds.find().exec()
@@ -277,6 +321,7 @@ app.get("/teamdetails", async (req,res)=>{
     if(req.session.user)
     {
     const team = req.session.user
+    console.log(team)
     res.render("teamdetails.ejs", { team });
     }
     else{
@@ -340,18 +385,23 @@ app.post("/evaluate1",async (req,res)=>{
         try{
         if(req.session.user)
         {
+            const id1 = await starts.find().exec()
+            const id2 = id1[0]['_id']
             const currentUserTeamName = req.session.user.team_name
             const Id = await teams.find({team_name:currentUserTeamName},{_id:1,edition:1})
+            const peerset = await starts.find({_id:id2},{peerset:1,_id:0})
+            console.log(peerset)
             const currentUserTeamNameId = String(Id[0]['_id'])
             const teamslist = await teams.find({edition:Id[0]['edition']}).exec();
             const filteredTeamsList = teamslist.filter((team) => team.team_name !== currentUserTeamName);
             const alreadyEvaluated = await peerevals.find({user_id:currentUserTeamNameId},{peerid:1, _id:0})
             const alreadyEvaluatedList = []
+           
             for(let id of alreadyEvaluated)
             {
                 alreadyEvaluatedList.push(id['peerid'])
             }
-            res.render("peerevaluationlist.ejs",{ filteredTeamsList, alreadyEvaluatedList });
+            res.render("peerevaluationlist.ejs",{ filteredTeamsList, alreadyEvaluatedList, peerset });
         }
         else{
             res.redirect('/teamlogin');
@@ -621,7 +671,7 @@ app.get("/adminlogin", (req,res)=>{
 
 app.post("/adminlogin",(req,res)=>{
 
-   const  admin = req.body.admin_name
+    const  admin = req.body.admin_name
     const password =req.body.admin_password
     if(admin=='admin' && password=='sih2k23'){
     req.session.admin = "admin"
@@ -815,10 +865,7 @@ app.post("/setteamlogincount", async (req,res)=>{
         if(req.session.admin==="admin"){
             const id1 = req.body.team_name
             const id = await teams.updateOne({team_name:id1},{logcount:0}).exec()
-            if(id)
-            {
             res.redirect('/admindashboard')
-            }
         }
     }
     catch(error){
@@ -1022,6 +1069,96 @@ app.get("/Schedule",(req,res)=>{
             
    })
 //End of Schedule route for both Teams and Jury Routes
+
+//reportadmin route handling pages
+
+app.get("/reportadminlogin",(req,res)=>{
+    if(req.session.reportadmin)
+    {
+    res.redirect('/reportadmindashboard')
+    }
+    else{
+    res.render("reportadminlogin.ejs");
+    }
+})
+
+
+app.get("/reportadmindashboard", async (req,res)=>{
+    try{
+    if(req.session.reportadmin)
+    {
+    const list = await teams.find({edition:'software'},{reportid:1,team_name:1,report_timestamp:1}).sort({ reportid: 1 }).exec()
+    res.render("reportadmindashboard.ejs", { list});
+    }
+    else{
+        res.redirect('/reportadminlogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/reportadminlogin')
+    }
+})
+
+app.get("/reportadmindashboard1", async (req,res)=>{
+    try{
+    if(req.session.reportadmin)
+    {
+    const list = await teams.find({edition:'hardware'},{reportid:1,team_name:1,report_timestamp:1}).exec()
+   
+    res.render("reportdashboard1.ejs", { list});
+    }
+    else{
+        res.redirect('/reportadminlogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/reportadminlogin')
+    }
+})
+
+app.post("/reportadminlogin", (req,res)=>{
+    const  admin = req.body.report_name
+    const password =req.body.report_password
+    if(admin=='reportadmin' && password=='sih2k23'){
+    req.session.reportadmin = "reportadmin"
+    res.redirect('/reportadmindashboard')}
+    else{
+        res.redirect('/reportadminlogin')
+    }
+})
+
+app.get("/selfreport", async (req,res)=>{
+    try{
+    if(req.session.reportadmin)
+    {
+    const id = req.query.id
+    const timestamp  = new Date();
+    const list = await teams.updateOne({_id:id},{report_timestamp:timestamp}).exec()
+    res.redirect("/reportadmindashboard");
+    }
+    else{
+        res.redirect('/reportadminlogin');
+    }}
+    catch(error){
+        console.log(error);
+        res.redirect('/reportadminlogin')
+    }
+})
+
+app.get("/reportadminlogout", (req, res) => {
+    // Destroy the user's session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+        } else {
+            // Redirect to the login page or any other appropriate page
+            res.redirect('/reportadminlogin');
+        }
+    });
+   })
+//end of reportadmin route handling pages
+
+
 
 app.listen(3000, function () {
     console.log('Server started at port 3000');
