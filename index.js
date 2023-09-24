@@ -19,7 +19,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-mongoose.connect('mongodb+srv://saipraneethkambhampati800:PFTyvSKltwa4wBFB@cluster0.w2azzd2.mongodb.net/SIH_2K23_EVALUATION')
+mongoose.connect('MONGO_DB_URL')
 .then(()=>{
     console.log("mongodb conncted")
 })
